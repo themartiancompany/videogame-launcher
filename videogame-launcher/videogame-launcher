@@ -1,0 +1,265 @@
+#!/usr/bin/env bash
+
+_bin="$( \
+  dirname \
+    "$( \
+      command \
+        -v \
+	  "env")")"
+_lib="${_bin}/../lib"
+source \
+  "${_lib}/libcrash-bash/crash-bash"
+
+_usr_get() {
+  local \
+    _bin
+  _bin="$( \
+    dirname \
+      "$(command \
+           -v \
+	   "env")")"
+  dirname \
+    "${_bin}"
+}
+
+_global_variables() {
+  launch_date=""
+  app_id=""
+  game_launcher=""
+  game_lang=""
+  game_settings=""
+  fullscreen_enabled=""
+  color=""
+  quiet=""
+}
+
+_requirements() {
+  _check_cmd \
+    'duckstation-nogui' \
+    'duckstation'
+}
+
+_game_dir_get() {
+  local \
+    _app_id="${1}" \
+    _dir
+  _dir="$( \
+    _usr_get)/games/${_app_id}"
+  echo \
+    "${_dir}"
+}
+
+_game_path_get() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _game_dir \
+    _path
+  _game_dir="$( \
+    _game_dir_get \
+      "${_app_id}")"
+  _path="${_game_dir}/${_lang}"
+  if [ ! -f "${_path}" ]; then
+    echo \
+      "No support for language '${lang}'"
+    echo \
+      "Running default language 'any'"
+    _path="${_game}/any"
+  fi
+  _game_path="$( \
+    cat \
+      "${_path}")"
+}
+
+_duckstation_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _settings="${3}" \
+    _fullscreen="${4}" \
+    _duckstation_opts=() \
+    _game_path
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  _duckstation_opts=(
+    -config
+      "${_settings}"
+  )
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _duckstation_opts+=(
+      -fullscreen
+    )
+  fi
+  duckstation-nogui \
+    "${_duckstation_opts[@]}" \
+    "${_game_path}"
+}
+
+_videogame_launcher() {
+  local \
+    _app_id="${1}" \
+    _game_launcher="${2}" \
+    _lang="${3}" \
+    _settings="${4}" \
+    _fullscreen="${5}"
+  "_${_game_launcher}_launch" \
+      "${_app_id}" \
+      "${_lang}" \
+      "${_settings}" \
+      "${_fullscreen}"
+}
+
+_usage() {
+  local \
+    _exit="${1}" \
+    _usage_text
+  IFS='' \
+    read \
+      -r \
+      -d '' \
+      _usage_text << \
+        ENDUSAGETEXT || true
+Seamlessly launch videogames.
+
+Usage:
+  $(_get "app" "name")
+    <app_id>
+
+  options:
+     -e <game_launcher>     It can be 'duckstation'.
+                            Default: $(_get "game" "launcher")
+     -l <game_lang>         Game languages.
+                            Default: $(_get "game" "lang")
+     -s <game_settings>     Duckstation settings file.
+                            Default: $(_get "game" "settings")
+     -f                     Launch the game in full-screen.
+                            Default: $(_get "fullscreen" "enabled")
+
+     -h                     This message.
+     -c                     Enable color output
+     -v                     Enable verbose output
+ENDUSAGETEXT
+  _printf \
+    '%s\n' \
+    "${_usage_text}"
+  exit \
+    "${_exit}"
+}
+
+_game_lang_auto_detect() {
+  local \
+    _uage \
+    _lang
+  _uage="${LANG%%.*}"
+  _lang="${_uage%%_*}"
+  _set_override \
+    "game" \
+    "lang" \
+    "${_lang}"
+}
+
+_game_settings_auto_detect() {
+  local \
+    _app_id \
+    _settings
+  _app_id="$( \
+    _get \
+      "app" \
+      "id")"
+  _settings="$( \
+    _usr_get)/games/${_app_id}/${_app_id}.settings.ini"
+  _set_override \
+    "game" \
+    "settings" \
+    "${_settings}"
+  _set_override \
+    "fullscreen" \
+    "enabled" \
+    "n"
+}
+
+_set_overrides() {
+  local \
+    _app_id
+  _app_id="$( \
+    _get \
+      "app" \
+      "id")"
+  if [[ -v override_quiet ]]; then
+    quiet="${override_quiet}"
+  elif [[ -z "${quiet}" ]]; then
+    quiet="y"
+  fi
+  if [[ -v override_color ]]; then
+    color="${override_color}"
+  elif [[ -z "${color}" ]]; then
+    color="n"
+  fi
+  _set_override \
+    "launch" \
+    "date" \
+    "$(_get_date_human)"
+  _set_override \
+    "game" \
+    "launcher" \
+    "duckstation"
+  _game_lang_auto_detect
+  _game_settings_auto_detect
+}
+
+_globals
+_global_variables
+_requirements
+while \
+  getopts \
+    'e:l:s:cvh?' \
+    arg; do
+  case \
+    "${arg}" in
+    e) override_game_launcher="${OPTARG}" ;;
+    l) override_game_lang="${OPTARG}" ;;
+    s) override_game_settings="${OPTARG}" ;;
+    f) override_fullscreen_enabled="y" ;;
+    c) override_color="y" ;;
+    v) override_quiet="n" ;;
+    h|?) _set_overrides && \
+         _usage \
+           0 ;;
+    *)
+    _msg_error \
+      "Invalid argument '${arg}'" \
+      0
+    _usage \
+      1
+    ;;
+  esac
+done
+shift \
+  $(( \
+    OPTIND - 1 \
+  ))
+if (( $# < 1 )); then
+  _msg_error \
+    "no app id given" \
+    0
+  _set_overrides
+  _usage \
+    1
+fi
+if (( 0 < $# )); then
+  _set \
+    "app" \
+    "id" \
+    "${1}"
+fi
+_set_overrides
+app_opts=(
+  "${app_id}"
+  "${game_launcher}"
+  "${game_lang}"
+  "${game_settings}"
+  "${fullscreen_enabled}"
+)
+_videogame_launcher \
+  "${app_opts}"
