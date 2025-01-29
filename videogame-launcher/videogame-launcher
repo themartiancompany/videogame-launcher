@@ -26,6 +26,7 @@ _global_variables() {
   launch_date=""
   app_id=""
   game_launcher=""
+  game_platform=""
   game_lang=""
   game_settings=""
   fullscreen_enabled=""
@@ -34,9 +35,26 @@ _global_variables() {
 }
 
 _requirements() {
+  true
+}
+
+_duckstation_requirements() {
   _check_cmd \
     'duckstation-nogui' \
     'duckstation'
+}
+
+_retroarch_requirements() {
+  local \
+    _os
+  _os="$( \
+    uname \
+      -o)"
+  if [[ "${_os}" == "Android" ]]; then
+    _check_cmd \
+      'su' \
+      'tsu'
+  fi
 }
 
 _game_dir_get() {
@@ -96,18 +114,103 @@ _duckstation_launch() {
     "${_game_path}"
 }
 
+_retroarch_launch() {
+  local \
+    _app_id="${1}" \
+    _platform="${2}" \
+    _lang="${3}" \
+    _os \
+    _game_path \
+    _cores_path \
+    _platform_core_path \
+    _cmd=()
+  _os="$( \
+    uname \
+      -o)"
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_os}" == "Android" ]]; then
+    _cores_path="/data/user/0/com.retroarch/cores"
+    if [[ "${_platform}" == "nes" ]]; then
+      _platform_core_path="${_cores_path}/quicknes_libretro_android.so"  
+    fi
+    _cmd=(
+      am
+        start \
+          -a
+            'android.intent.action.MAIN'
+          -n
+            'com.retroarch/.browser.retroactivity.RetroActivityFuture'
+          -e
+            'ROM'
+            "${_game_path}"
+          -e
+            'LIBRETRO'
+            "${_platform_core_path}"  
+    )
+    su \
+      -c \
+        "${_cmd[*]}"
+  fi
+}
+
+_fceux_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _fceux_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _fceux_opts+=(
+      --fullscreen
+    )
+  fi
+  fceux \
+    "${_fceux_opts[@]}" \
+    "${_game_path}"
+}
+
+_game_launcher_opts_get() {
+  if [[ "${_game_launcher}" == "duckstation" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      "${_settings}"
+      "${_fullscreen}"
+    )
+  elif [[ "${_game_launcher}" == "retroarch" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_game_platform}"
+      "${_lang}"
+    )
+  elif [[ "${_game_launcher}" == "fceux" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      "${_fullscreen}"
+    )
+  fi
+}
+
 _videogame_launcher() {
   local \
     _app_id="${1}" \
     _game_launcher="${2}" \
-    _lang="${3}" \
-    _settings="${4}" \
-    _fullscreen="${5}"
+    _game_platform="${3}" \
+    _lang="${4}" \
+    _settings="${5}" \
+    _fullscreen="${6}" \
+    _launch_opts=()
+  "_${_game_launcher}_requirements"
+  _game_launcher_opts_get
   "_${_game_launcher}_launch" \
-      "${_app_id}" \
-      "${_lang}" \
-      "${_settings}" \
-      "${_fullscreen}"
+    "${_launch_opts[@]}"
 }
 
 _usage() {
@@ -120,6 +223,7 @@ _usage() {
       -d '' \
       _usage_text << \
         ENDUSAGETEXT || true
+
 Seamlessly launch videogames.
 
 Usage:
@@ -127,14 +231,17 @@ Usage:
     <app_id>
 
   options:
-     -e <game_launcher>     It can be 'duckstation'.
-                            Default: $(_get "game" "launcher")
+     -e <game_launcher>     It can be 'duckstation',
+                            'fceux', 'retroarch'.
+                            Default: ${game_launcher}
+     -p <game_platform>     Game platform.
+                            Default: ${game_platform}
      -l <game_lang>         Game languages.
-                            Default: $(_get "game" "lang")
+                            Default: ${game_lang}
      -s <game_settings>     Duckstation settings file.
-                            Default: $(_get "game" "settings")
+                            Default: ${game_settings}
      -f                     Launch the game in full-screen.
-                            Default: $(_get "fullscreen" "enabled")
+                            Default: ${fullscreen_enabled}
 
      -h                     This message.
      -c                     Enable color output
@@ -179,6 +286,22 @@ _game_settings_auto_detect() {
     "n"
 }
 
+_game_platform_auto_detect() {
+  local \
+    _platform
+  if [[ "${game_launcher}" == "duckstation" ]]; then
+    _platform="playstation"
+  elif [[ "${game_launcher}" == "fceux" ]]; then
+    _platform="nes"
+  elif [[ "${game_launcher}" == "retroarch" ]]; then
+    _platform="nes"
+  fi
+  _set_override \
+    "game" \
+    "platform" \
+    "${_platform}"
+}
+
 _set_overrides() {
   local \
     _app_id
@@ -204,6 +327,7 @@ _set_overrides() {
     "game" \
     "launcher" \
     "duckstation"
+  _game_platform_auto_detect
   _game_lang_auto_detect
   _game_settings_auto_detect
 }
@@ -213,11 +337,12 @@ _global_variables
 _requirements
 while \
   getopts \
-    'e:l:s:cvh?' \
+    'e:p:l:s:cvh?' \
     arg; do
   case \
     "${arg}" in
     e) override_game_launcher="${OPTARG}" ;;
+    p) override_game_platform="${OPTARG}" ;;
     l) override_game_lang="${OPTARG}" ;;
     s) override_game_settings="${OPTARG}" ;;
     f) override_fullscreen_enabled="y" ;;
@@ -257,6 +382,7 @@ _set_overrides
 app_opts=(
   "${app_id}"
   "${game_launcher}"
+  "${game_platform}"
   "${game_lang}"
   "${game_settings}"
   "${fullscreen_enabled}"
