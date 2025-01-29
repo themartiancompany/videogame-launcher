@@ -286,6 +286,24 @@ _game_settings_auto_detect() {
     "n"
 }
 
+_game_launcher_auto_detect() {
+  local \
+    _launcher \
+    _os
+  _os="$( \
+    uname \
+      -o)"
+  if [[ "${_os}" == "Android" ]]; then
+    _launcher="retroarch"
+  elif [[ "${_os}" == "GNU/Linux" ]]; then
+    _launcher="duckstation"
+  fi
+  _set_override \
+    "game" \
+    "launcher" \
+    "${_launcher}"
+}
+
 _game_platform_auto_detect() {
   local \
     _platform
@@ -323,10 +341,7 @@ _set_overrides() {
     "launch" \
     "date" \
     "$(_get_date_human)"
-  _set_override \
-    "game" \
-    "launcher" \
-    "duckstation"
+  _game_launcher_auto_detect
   _game_platform_auto_detect
   _game_lang_auto_detect
   _game_settings_auto_detect
