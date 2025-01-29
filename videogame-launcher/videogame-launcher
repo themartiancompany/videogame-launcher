@@ -61,10 +61,10 @@ _game_path_get() {
   _path="${_game_dir}/${_lang}"
   if [ ! -f "${_path}" ]; then
     echo \
-      "No support for language '${lang}'"
+      "No support for language '${_lang}'"
     echo \
       "Running default language 'any'"
-    _path="${_game}/any"
+    _path="${_game_dir}/any"
   fi
   _game_path="$( \
     cat \
@@ -262,4 +262,4 @@ app_opts=(
   "${fullscreen_enabled}"
 )
 _videogame_launcher \
-  "${app_opts}"
+  "${app_opts[@]}"
