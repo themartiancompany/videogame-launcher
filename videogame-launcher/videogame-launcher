@@ -213,6 +213,17 @@ _videogame_launcher() {
     "${_launch_opts[@]}"
 }
 
+# Shows configuration options.
+_show_config() {
+  _msg_info "${app_name} configuration"
+  _msg_info "              Launch date:   ${launch_date}"
+  _msg_info "            Game launcher:   ${game_launcher}"
+  _msg_info "            Game platform:   ${game_platform}"
+  _msg_info "            Game language:   ${game_lang}"
+  _msg_info "            Game settings:   ${game_settings}"
+  _msg_info "       Fullscreen enabled:   ${fullscreen_enabled}"
+}
+
 _usage() {
   local \
     _exit="${1}" \
@@ -394,6 +405,7 @@ if (( 0 < $# )); then
     "${1}"
 fi
 _set_overrides
+_show_config
 app_opts=(
   "${app_id}"
   "${game_launcher}"
