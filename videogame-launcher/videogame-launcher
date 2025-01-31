@@ -44,6 +44,11 @@ _duckstation_requirements() {
     'duckstation'
 }
 
+_fceux_requirements() {
+  _check_cmd \
+    'fceux'
+}
+
 _retroarch_requirements() {
   local \
     _os
