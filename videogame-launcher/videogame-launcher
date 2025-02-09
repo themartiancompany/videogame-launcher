@@ -68,6 +68,11 @@ _fceux_requirements() {
     'fceux'
 }
 
+_gearboy_requirements() {
+  _check_cmd \
+    'gearboy'
+}
+
 _retroarch_requirements() {
   local \
     _os
@@ -160,6 +165,8 @@ _retroarch_launch() {
       _platform_core_path="${_cores_path}/quicknes_libretro_android.so"  
     elif [[ "${_platform}" == "playstation" ]]; then
       _platform_core_path="${_cores_path}/pcsx_rearmed_libretro_android.so"  
+    elif [[ "${_platform}" == "gameboy" ]]; then
+      _platform_core_path="${_cores_path}/gearboy_libretro_android.so"  
     fi
     _cmd=(
       am
@@ -201,6 +208,26 @@ _fceux_launch() {
     "${_game_path}"
 }
 
+_gearboy_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _fceux_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _gearboy_opts+=(
+      # --fullscreen
+    )
+  fi
+  gearboy \
+    "${_gearboy_opts[@]}" \
+    "${_game_path}"
+}
+
 _game_launcher_opts_get() {
   if [[ "${_game_launcher}" == "duckstation" ]]; then
     _launch_opts+=(
@@ -216,6 +243,12 @@ _game_launcher_opts_get() {
       "${_lang}"
     )
   elif [[ "${_game_launcher}" == "fceux" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      "${_fullscreen}"
+    )
+  elif [[ "${_game_launcher}" == "gearboy" ]]; then
     _launch_opts+=(
       "${_app_id}"
       "${_lang}"
@@ -271,7 +304,8 @@ Usage:
      -e <game_launcher>     It can be 'duckstation',
                             'fceux', 'retroarch'.
                             Default: ${game_launcher}
-     -p <game_platform>     Game platform.
+     -p <game_platform>     Game platform. It can be
+                            'playstation', 'nes', 'gameboy'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
@@ -334,6 +368,9 @@ _game_launcher_auto_detect() {
     _launcher="retroarch"
   elif [[ "${_os}" == "GNU/Linux" ]]; then
     _launcher="duckstation"
+    if [[ "${game_platform}" == "gameboy" ]]; then
+      _launcher="gearboy"
+    fi
   fi
   _set_override \
     "game" \
@@ -348,6 +385,8 @@ _game_platform_auto_detect() {
     _platform="playstation"
   elif [[ "${game_launcher}" == "fceux" ]]; then
     _platform="nes"
+  elif [[ "${game_launcher}" == "gearboy" ]]; then
+    _platform="gameboy"
   elif [[ "${game_launcher}" == "retroarch" ]]; then
     _platform="nes"
   fi
