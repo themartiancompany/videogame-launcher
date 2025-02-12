@@ -382,10 +382,9 @@ _game_lang_auto_detect() {
 
 _game_settings_auto_detect() {
   local \
-    _app_id \
     _settings
   _settings="$( \
-    _usr_get)/games/${_app_id}/${_app_id}.settings.ini"
+    _usr_get)/games/${app_id}/${app_id}.settings.ini"
   _set_override \
     "game" \
     "settings" \
