@@ -210,7 +210,8 @@ _mame_launch() {
       -window
       -nomaximize
       -rompath
-        "${_game_path}"
+        "$(dirname \
+             "${_game_path}")"
     )
   fi
   mame \
