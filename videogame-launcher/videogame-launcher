@@ -73,6 +73,11 @@ _gearboy_requirements() {
     'gearboy'
 }
 
+_mame_requirements() {
+  _check_cmd \
+    'mame'
+}
+
 _retroarch_requirements() {
   local \
     _os
@@ -161,7 +166,9 @@ _retroarch_launch() {
     "${_lang}"
   if [[ "${_os}" == "Android" ]]; then
     _cores_path="/data/user/0/com.retroarch/cores"
-    if [[ "${_platform}" == "nes" ]]; then
+    if [[ "${_platform}" == "arcade" ]]; then
+      _platform_core_path="${_cores_path}/mame2000_libretro_android.so"  
+    elif [[ "${_platform}" == "nes" ]]; then
       _platform_core_path="${_cores_path}/quicknes_libretro_android.so"  
     elif [[ "${_platform}" == "playstation" ]]; then
       _platform_core_path="${_cores_path}/pcsx_rearmed_libretro_android.so"  
@@ -186,6 +193,30 @@ _retroarch_launch() {
       -c \
         "${_cmd[*]}"
   fi
+}
+
+_mame_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _mame_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "n" ]]; then
+    _mame_opts+=(
+      -window
+      -nomaximize
+      -rompath
+        "${_game_path}"
+    )
+  fi
+  mame \
+    "${_mame_opts[@]}" \
+    "$(basename \
+         "${_game_path}")"
 }
 
 _fceux_launch() {
@@ -254,6 +285,16 @@ _game_launcher_opts_get() {
       "${_lang}"
       "${_fullscreen}"
     )
+  elif [[ "${_game_launcher}" == "mame" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      "${_fullscreen}"
+    )
+  else
+    _msg_error \
+      "Unknown launcher '${_game_launcher}'." \
+      1
   fi
 }
 
@@ -302,10 +343,12 @@ Usage:
 
   options:
      -e <game_launcher>     It can be 'duckstation',
-                            'fceux', 'retroarch'.
+                            'fceux', 'gearboy', 'mame',
+			    'retroarch'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
-                            'playstation', 'nes', 'gameboy'.
+                            'playstation', 'arcade',
+			    'nes', 'gameboy'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
@@ -341,10 +384,6 @@ _game_settings_auto_detect() {
   local \
     _app_id \
     _settings
-  _app_id="$( \
-    _get \
-      "app" \
-      "id")"
   _settings="$( \
     _usr_get)/games/${_app_id}/${_app_id}.settings.ini"
   _set_override \
@@ -364,11 +403,14 @@ _game_launcher_auto_detect() {
   _os="$( \
     uname \
       -o)"
+  _launcher=""
   if [[ "${_os}" == "Android" ]]; then
     _launcher="retroarch"
   elif [[ "${_os}" == "GNU/Linux" ]]; then
     _launcher="duckstation"
-    if [[ "${game_platform}" == "gameboy" ]]; then
+    if [[ "${game_platform}" == "arcade" ]]; then
+      _launcher="mame"
+    elif [[ "${game_platform}" == "gameboy" ]]; then
       _launcher="gearboy"
     fi
   fi
@@ -381,12 +423,15 @@ _game_launcher_auto_detect() {
 _game_platform_auto_detect() {
   local \
     _platform
+  _platform=""
   if [[ "${game_launcher}" == "duckstation" ]]; then
     _platform="playstation"
   elif [[ "${game_launcher}" == "fceux" ]]; then
     _platform="nes"
   elif [[ "${game_launcher}" == "gearboy" ]]; then
     _platform="gameboy"
+  elif [[ "${game_launcher}" == "mame" ]]; then
+    _platform="arcade"
   elif [[ "${game_launcher}" == "retroarch" ]]; then
     _platform="nes"
   fi
