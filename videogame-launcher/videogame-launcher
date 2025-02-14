@@ -168,7 +168,7 @@ _retroarch_launch() {
     _cores_path="/data/user/0/com.retroarch/cores"
     if [[ "${_platform}" == "arcade" ]]; then
       _platform_core_path="${_cores_path}/mame2000_libretro_android.so"  
-    if [[ "${_platform}" == "mame2010" ]]; then
+    elif [[ "${_platform}" == "mame2010" ]]; then
       _platform_core_path="${_cores_path}/mame2010_libretro_android.so"  
     elif [[ "${_platform}" == "nes" ]]; then
       _platform_core_path="${_cores_path}/quicknes_libretro_android.so"  
@@ -320,6 +320,7 @@ _videogame_launcher() {
 _show_config() {
   _msg_info "${app_name} configuration"
   _msg_info "              Launch date:   ${launch_date}"
+  _msg_info "                   App ID:   ${app_id}"
   _msg_info "            Game launcher:   ${game_launcher}"
   _msg_info "            Game platform:   ${game_platform}"
   _msg_info "            Game language:   ${game_lang}"
@@ -422,6 +423,27 @@ _game_launcher_auto_detect() {
     "${_launcher}"
 }
 
+_retroarch_platform_auto_detect() {
+  local \
+    _game_path
+  _msg_info \
+    "Retroarch platform auto-detect."
+  _game_path_get \
+      "${app_id}" \
+      "${game_lang}"
+  _msg_info \
+    "Game path: ${_game_path}"
+  if [[ "${_game_path}" == *".nes" ]]; then
+    _platform="nes"
+  elif [[ "${_game_path}" == *".gbc" || \
+	  "${_game_path}" == *".gb" ]]; then
+    _platform="gameboy"
+  elif [[ "${_game_path}" == *".bin" || \
+	  "${_game_path}" == *".cue" ]]; then
+    _platform="playstation"
+  fi
+}
+
 _game_platform_auto_detect() {
   local \
     _platform
@@ -435,7 +457,7 @@ _game_platform_auto_detect() {
   elif [[ "${game_launcher}" == "mame" ]]; then
     _platform="arcade"
   elif [[ "${game_launcher}" == "retroarch" ]]; then
-    _platform="nes"
+    _retroarch_platform_auto_detect
   fi
   _set_override \
     "game" \
