@@ -25,6 +25,7 @@ DOC_DIR=$(DESTDIR)$(PREFIX)/share/doc/$(_PROJECT)
 SHARE_DIR=$(DESTDIR)$(PREFIX)/share/$(_PROJECT)
 BIN_DIR=$(DESTDIR)$(PREFIX)/bin
 LIB_DIR=$(DESTDIR)$(PREFIX)/lib/$(_PROJECT)
+MAN_DIR?=$(DESTDIR)$(PREFIX)/share/man
 
 _INSTALL_FILE=\
   install \
@@ -39,9 +40,8 @@ _INSTALL_EXE=\
 DOC_FILES=\
   $(wildcard \
       *.rst)
-SCRIPT_FILES=\
-  $(wildcard \
-      $(_PROJECT)/*)
+_BASH_FILES=\
+  videogame-launcher
 
 all:
 
@@ -52,9 +52,9 @@ shellcheck:
 	shellcheck \
 	  -s \
 	    bash \
-	  $(SCRIPT_FILES)
+	  $(_PROJECT)/$(_BASH_FILES)
 
-install: install-configs install-scripts install-doc
+install: install-configs install-man install-scripts install-doc
 
 install-scripts:
 
@@ -78,4 +78,14 @@ install-configs:
 	  "configs" \
 	  "$(SHARE_DIR)/"
 
-.PHONY: check install install-configs install-doc install-scripts shellcheck
+install-man:
+
+	$(_INSTALL_DIR) \
+	  "$(MAN_DIR)/man1"
+	for _file in $(_BASH_FILES); do \
+	  rst2man \
+	    "man/$${_file}.1.rst" \
+	    "$(MAN_DIR)/man1/$${_file}.1"; \
+	done
+
+.PHONY: check install install-configs install-doc install-man install-scripts shellcheck
