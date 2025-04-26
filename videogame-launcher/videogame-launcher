@@ -233,13 +233,13 @@ _pcsx2_launch() {
   _game_dir="$( \
     dirname \
       "${_game_path}")"
-  _settings_sytem="${_game_dir}/inis"
   if [[ ! -d "${_config_dir_user}" ]]; then
     _msg=(
       "Creating game configuration."
     )
     _msg_info \
       "${_msg[*]}"
+    _settings_system="${_game_dir}/inis"
     if [[ ! -d "${_settings_system}" ]]; then
       _msg=(
         "No game specific configuration"
