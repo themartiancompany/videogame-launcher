@@ -578,7 +578,7 @@ _retroarch_platform_auto_detect() {
       "${app_id}" \
       "${game_lang}"
   _msg_info \
-    "Game path: ${_game_path}"
+    "Game path: ${_game_path}."
   if [[ "${_game_path}" == *".nes" ]]; then
     _platform="nes"
   elif [[ "${_game_path}" == *".gbc" || \
