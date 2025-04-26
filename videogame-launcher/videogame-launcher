@@ -263,6 +263,7 @@ _pcsx2_launch() {
   fi
   _pcsx2_opts+=(
     --fullboot
+    --nogui
   )
   if [[ ! -e "${_cache_dir}/bios" ]]; then
     mkdir \
