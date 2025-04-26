@@ -528,10 +528,17 @@ _game_settings_auto_detect() {
 _game_launcher_auto_detect() {
   local \
     _launcher \
-    _os
+    _os \
+    _msg=()
   _os="$( \
     uname \
       -o)"
+  _msg=(
+    "Detecting game launcher"
+    "for platform '${game_platform}'."
+  )
+  _msg_info \
+    "${_msg[*]}"
   _launcher=""
   if [[ "${_os}" == "Android" ]]; then
     _launcher="retroarch"
