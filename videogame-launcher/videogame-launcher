@@ -79,6 +79,11 @@ _pcsx2_requirements() {
   _check_cmd \
     "${_pcsx2}" \
     "${_pcsx2_pkgname}"
+  if [[ ! -d "$(_usr_get)/share/ps2/bios" ]]; then
+    _msg_error \
+      "Please install 'ps2-bios'." \
+      1
+  fi
 }
 
 _pcsx2_auto_detect() {
