@@ -505,7 +505,9 @@ _game_lang_auto_detect() {
 
 _game_settings_auto_detect() {
   local \
+    _launcher \
     _settings
+  _launcher="${game_launcher}"
   if [[ "${_launcher}" == "duckstation" ]]; then
     _settings="$( \
       _usr_get)/games/${app_id}/${app_id}.settings.ini"
