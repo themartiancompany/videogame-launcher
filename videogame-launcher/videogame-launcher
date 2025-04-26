@@ -527,6 +527,7 @@ _game_settings_auto_detect() {
 
 _game_launcher_auto_detect() {
   local \
+    _game_platform \
     _launcher \
     _os \
     _msg=()
@@ -539,16 +540,17 @@ _game_launcher_auto_detect() {
   )
   _msg_info \
     "${_msg[*]}"
+  _game_platform="${override_game_platform}"
   _launcher=""
   if [[ "${_os}" == "Android" ]]; then
     _launcher="retroarch"
   elif [[ "${_os}" == "GNU/Linux" ]]; then
     _launcher="duckstation"
-    if [[ "${game_platform}" == "arcade" ]]; then
+    if [[ "${_game_platform}" == "arcade" ]]; then
       _launcher="mame"
-    elif [[ "${game_platform}" == "gameboy" ]]; then
+    elif [[ "${_game_platform}" == "gameboy" ]]; then
       _launcher="gearboy"
-    elif [[ "${game_platform}" == "playstation2" ]]; then
+    elif [[ "${_game_platform}" == "playstation2" ]]; then
       _launcher="pcsx2"
     fi
   fi
