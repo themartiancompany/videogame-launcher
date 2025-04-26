@@ -262,6 +262,7 @@ _pcsx2_launch() {
     --fullboot
   )
   if [[ -e "${_config_dir_user}/${_pcsx2}" ]]; then
+    _bios_file="ps2-0120e-20000902.bin"
     _pcsx2_opts+=(
       --cfgpath
         "${_config_dir_user}/${_pcsx2}"
