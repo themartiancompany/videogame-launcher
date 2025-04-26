@@ -217,7 +217,8 @@ _pcsx2_launch() {
     _game_path \
     _pcsx2 \
     _pcsx2_ver \
-    _game_dir
+    _game_dir \
+    _settings_system
   _config_dir_user="${HOME}/.config/${_app_id}"
   _pcsx2="$( \
     _pcsx2_auto_detect)"
@@ -232,17 +233,29 @@ _pcsx2_launch() {
   _game_dir="$( \
     dirname \
       "${_game_path}")"
-  # if [[ ! -d "${_settings}" ]]; then
-  #   _settings="$( \
-  #     _usr_get)/share/${app_name}/configs"
-  # fi
+  _settings_sytem="${_game_dir}/inis"
   if [[ ! -d "${_config_dir_user}" ]]; then
+    _msg=(
+      "Creating game configuration."
+    )
+    _msg_info \
+      "${_msg[*]}"
+    if [[ ! -d "${_settings_system}" ]]; then
+      _msg=(
+        "No game specific configuration"
+        "files, using system defaults."
+      )
+      _msg_info \
+        "${_msg[*]}"
+      _settings_system="$( \
+        _usr_get)/share/${app_name}/configs"
+    fi
     mkdir \
       -p \
       "${_config_dir_user}"
     cp \
       -r \
-      "$(_usr_get)/share/${app_name}/configs/"* \
+      "${_settings_system}/"* \
       "${_config_dir_user}"
   fi
   _pcsx2_opts+=(
