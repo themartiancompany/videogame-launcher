@@ -541,14 +541,16 @@ _game_launcher_auto_detect() {
   _os="$( \
     uname \
       -o)"
+  if [[ -v "override_game_platform" ]]; then
+    _game_platform="${override_game_platform}"
+  fi
+  _launcher=""
   _msg=(
     "Detecting game launcher"
-    "for platform '${game_platform}'."
+    "for platform '${_game_platform}'."
   )
   _msg_info \
     "${_msg[*]}"
-  _game_platform="${override_game_platform}"
-  _launcher=""
   if [[ "${_os}" == "Android" ]]; then
     _launcher="retroarch"
   elif [[ "${_os}" == "GNU/Linux" ]]; then
@@ -672,7 +674,7 @@ shift \
   ))
 if (( $# < 1 )); then
   _msg_error \
-    "no app id given" \
+    "No app id given." \
     0
   _set_overrides
   _usage \
