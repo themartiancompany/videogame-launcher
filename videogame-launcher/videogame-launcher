@@ -606,7 +606,7 @@ _game_platform_auto_detect() {
     _platform="arcade"
   elif [[ "${game_launcher}" == "retroarch" ]]; then
     _retroarch_platform_auto_detect
-  elif [[ "${game_launcher}" == "$(lower \
+  elif [[ "${game_launcher}" == "$(_lower \
 	                             "pcsx2")"* ]]; then
     _platform="playstation2"
   fi
