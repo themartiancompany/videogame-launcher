@@ -228,25 +228,32 @@ _pcsx2_launch() {
     "${_app_id}" \
     "${_lang}"
   _msg_info \
-    "Running '${_game_path}'"
+    "Running '${_game_path}'."
   _game_dir="$( \
     dirname \
       "${_game_path}")"
-  if [[ -d "${_settings}" ]]; then
-    if [[ ! -d "${_config_dir_user}" ]]; then
-      mkdir \
-        -p \
-	"${_config_dir_user}"
-      cp \
-        -r \
-	"${_config_dir_user}"
-    fi
+  # if [[ ! -d "${_settings}" ]]; then
+  #   _settings="$( \
+  #     _usr_get)/share/${app_name}/configs"
+  # fi
+  if [[ ! -d "${_config_dir_user}" ]]; then
+    mkdir \
+      -p \
+      "${_config_dir_user}"
+    cp \
+      -r \
+      "$(_usr_get)/share/${app_name}/configs/"* \
+      "${_config_dir_user}"
   fi
-  _pcsx2_opts=(
-    --cfgpath
-      "${_config_dir_user}/inis/${_pcsx2_ver}"
+  _pcsx2_opts+=(
     --fullboot
   )
+  if [[ -e "${_config_dir_user}/${_pcsx2}" ]]; then
+    _pcsx2_opts+=(
+      --cfgpath
+        "${_config_dir_user}/${_pcsx2}"
+    )
+  fi
   if [[ "${_fullscreen}" == "y" ]]; then
     _pcsx2_opts+=(
       --fullscreen
