@@ -22,27 +22,60 @@
 PREFIX ?= /usr/local
 _PROJECT=videogame-launcher
 DOC_DIR=$(DESTDIR)$(PREFIX)/share/doc/$(_PROJECT)
+SHARE_DIR=$(DESTDIR)$(PREFIX)/share/$(_PROJECT)
 BIN_DIR=$(DESTDIR)$(PREFIX)/bin
 LIB_DIR=$(DESTDIR)$(PREFIX)/lib/$(_PROJECT)
 
-DOC_FILES=$(wildcard *.rst)
-SCRIPT_FILES=$(wildcard $(_PROJECT)/*)
+_INSTALL_FILE=\
+  install \
+    -vDm644
+_INSTALL_DIR=\
+  install \
+    -vdm755
+_INSTALL_EXE=\
+  install \
+    -vDm755
+
+DOC_FILES=\
+  $(wildcard \
+      *.rst)
+SCRIPT_FILES=\
+  $(wildcard \
+      $(_PROJECT)/*)
 
 all:
 
 check: shellcheck
 
 shellcheck:
-	shellcheck -s bash $(SCRIPT_FILES)
 
-install: install-scripts install-doc
+	shellcheck \
+	  -s \
+	    bash \
+	  $(SCRIPT_FILES)
+
+install: install-configs install-scripts install-doc
 
 install-scripts:
 
-	install -vDm 755 "$(_PROJECT)/$(_PROJECT)" "$(BIN_DIR)/$(_PROJECT)"
+	$(_INSTALL_EXE) \
+	  "$(_PROJECT)/$(_PROJECT)" \
+	  "$(BIN_DIR)/$(_PROJECT)"
 
 install-doc:
 
-	install -vDm 644 $(DOC_FILES) -t $(DOC_DIR)
+	$(_INSTALL_FILE) \
+	  $(DOC_FILES) \
+	  -t \
+	  $(DOC_DIR)
 
-.PHONY: check install install-doc install-scripts shellcheck
+install-configs:
+
+	$(_INSTALL_DIR) \
+	  "$(SHARE_DIR)"
+	cp \
+	  -r \
+	  "configs" \
+	  "$(SHARE_DIR)/"
+
+.PHONY: check install install-configs install-doc install-scripts shellcheck
