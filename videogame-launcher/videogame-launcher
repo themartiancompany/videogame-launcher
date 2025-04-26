@@ -218,7 +218,10 @@ _pcsx2_launch() {
     _pcsx2 \
     _pcsx2_ver \
     _game_dir \
-    _settings_system
+    _settings_system \
+    _config_dir_user \
+    _cache_dir
+  _cache_dir="${HOME}/.cache/${_app_id}"
   _config_dir_user="${HOME}/.config/${_app_id}"
   _pcsx2="$( \
     _pcsx2_auto_detect)"
@@ -261,8 +264,24 @@ _pcsx2_launch() {
   _pcsx2_opts+=(
     --fullboot
   )
+  if [[ ! -e "${_cache_dir}/bios" ]]; then
+    mkdir \
+      -p \
+      "${_cache_dir}/bios"
+    cp \
+      "$(_usr_get)/share/ps2/bios/"* \
+      "${_cache_dir}/bios"
+  fi
   if [[ -e "${_config_dir_user}/${_pcsx2}" ]]; then
     _bios_file="ps2-0120e-20000902.bin"
+    sed \
+      -i \
+      "s|%_bios_dir%|${_cache_dir}/bios|g" \
+      "${_config_dir_user}/${_pcsx2}/PCSX2_ui.ini"
+    sed \
+      -i \
+      "s|%_bios_file%|${_bios_file}|g" \
+      "${_config_dir_user}/${_pcsx2}/PCSX2_ui.ini"
     _pcsx2_opts+=(
       --cfgpath
         "${_config_dir_user}/${_pcsx2}"
