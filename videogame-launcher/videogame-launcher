@@ -520,8 +520,7 @@ _game_settings_auto_detect() {
   elif [[ "${_launcher}" == "pcsx2" ]]; then
     _pcsx2="$( \
       _pcsx2_auto_detect)"
-    _settings="$( \
-      _usr_get)/games/${app_id}/${_pcsx2}"
+    _settings="${HOME}/.config/${app_id}/${_pcsx2}"
   fi
   _set_override \
     "game" \
