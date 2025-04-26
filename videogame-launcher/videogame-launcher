@@ -63,6 +63,62 @@ _duckstation_requirements() {
     'duckstation'
 }
 
+_pcsx2_requirements() {
+  local \
+    _pcsx2 \
+    _pcsx2_pkgname
+  # Maybe at some point Android
+  # will be blessed with PlayStation 2
+  # support.
+  _pcsx2="$( \
+    _pcsx2_auto_detect)"
+  _pcsx2_pkgname="${_pcsx2}"
+  if [[ "${_pcsx2}" == "PCSX2" ]]; then
+    _pcsx2_pkgname="pcsx2"
+  fi
+  _check_cmd \
+    "${_pcsx2}" \
+    "${_pcsx2_pkgname}"
+}
+
+_pcsx2_auto_detect() {
+  local \
+    _cpuinfo \
+    _pcsx2 \
+    _sse3 \
+    _sse4
+  # Maybe at some point Android
+  # will be blessed with PlayStation 2
+  # support.
+  _sse3="$( \
+    cat \
+      "/proc/cpuinfo" | \
+      grep \
+        "^flags" | \
+        grep \
+          "\bsse3\b")"
+  _sse4="$( \
+    cat \
+      "/proc/cpuinfo" | \
+      grep \
+        "^flags" | \
+        grep \
+          "\bsse4\b")"
+  if [[ "${_sse3}" == "" ]]; then
+    _pcsx2="pcsx2-1.6"
+  fi
+  if [[ "${_sse3}" != "" ]]; then
+    _pcsx2="pcsx2-1.7"
+  fi
+  if [[ "${_sse4}" != "" ]]; then
+    _pcsx2="PCSX2"
+  fi
+  echo \
+    "$(command \
+         -v \
+         "${_pcsx2}")"
+}
+
 _fceux_requirements() {
   _check_cmd \
     'fceux'
@@ -147,6 +203,35 @@ _duckstation_launch() {
     "${_duckstation_opts[@]}" \
     "${_game_path}"
 }
+
+_pcsx2_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _settings="${3}" \
+    _fullscreen="${4}" \
+    _pcsx2_opts=() \
+    _game_path \
+    _pcsx2
+  _pcsx2="$( \
+    _pcsx2_auto_detect)"
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  _pcsx2_opts=(
+    -config
+      "${_settings}"
+  )
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _duckstation_opts+=(
+      -fullscreen
+    )
+  fi
+  duckstation-nogui \
+    "${_duckstation_opts[@]}" \
+    "${_game_path}"
+}
+
 
 _retroarch_launch() {
   local \
@@ -270,6 +355,13 @@ _game_launcher_opts_get() {
       "${_settings}"
       "${_fullscreen}"
     )
+  elif [[ "${_game_launcher}" == "pcsx2" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      "${_settings}"
+      "${_fullscreen}"
+    )
   elif [[ "${_game_launcher}" == "retroarch" ]]; then
     _launch_opts+=(
       "${_app_id}"
@@ -348,11 +440,12 @@ Usage:
   options:
      -e <game_launcher>     It can be 'duckstation',
                             'fceux', 'gearboy', 'mame',
-			    'retroarch'.
+			    'retroarch', 'pcsx2'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
-			    'mame2010', 'nes', 'gameboy'.
+			    'mame2010', 'nes', 'gameboy',
+                            'playstation2'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
@@ -415,6 +508,8 @@ _game_launcher_auto_detect() {
       _launcher="mame"
     elif [[ "${game_platform}" == "gameboy" ]]; then
       _launcher="gearboy"
+    elif [[ "${game_platform}" == "playstation2" ]]; then
+      _launcher="pcsx2"
     fi
   fi
   _set_override \
@@ -441,6 +536,8 @@ _retroarch_platform_auto_detect() {
   elif [[ "${_game_path}" == *".bin" || \
 	  "${_game_path}" == *".cue" ]]; then
     _platform="playstation"
+  elif [[ "${_game_path}" == *".iso" ]]; then
+    _platform="playstation2"
   fi
 }
 
@@ -458,6 +555,9 @@ _game_platform_auto_detect() {
     _platform="arcade"
   elif [[ "${game_launcher}" == "retroarch" ]]; then
     _retroarch_platform_auto_detect
+  elif [[ "${game_launcher}" == "$(lower \
+	                             "pcsx2")"* ]]; then
+    _platform="playstation2"
   fi
   _set_override \
     "game" \
@@ -468,10 +568,7 @@ _game_platform_auto_detect() {
 _set_overrides() {
   local \
     _app_id
-  _app_id="$( \
-    _get \
-      "app" \
-      "id")"
+  _app_id="${app_id}"
   if [[ -v override_quiet ]]; then
     quiet="${override_quiet}"
   elif [[ -z "${quiet}" ]]; then
