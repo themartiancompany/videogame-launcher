@@ -229,6 +229,8 @@ _pcsx2_launch() {
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
+  _msg_info \
+    "Running '${_game_path}'"
   _game_dir="$( \
     dirname \
       "${_game_path}")"
