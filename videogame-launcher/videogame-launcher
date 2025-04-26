@@ -119,9 +119,7 @@ _pcsx2_auto_detect() {
     _pcsx2="PCSX2"
   fi
   echo \
-    "$(command \
-         -v \
-         "${_pcsx2}")"
+    "${_pcsx2}"
 }
 
 _fceux_requirements() {
