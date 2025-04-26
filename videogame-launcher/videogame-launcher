@@ -511,14 +511,17 @@ _game_lang_auto_detect() {
 _game_settings_auto_detect() {
   local \
     _launcher \
-    _settings
+    _settings \
+    _pcsx2
   _launcher="${game_launcher}"
   if [[ "${_launcher}" == "duckstation" ]]; then
     _settings="$( \
       _usr_get)/games/${app_id}/${app_id}.settings.ini"
   elif [[ "${_launcher}" == "pcsx2" ]]; then
+    _pcsx2="$( \
+      _pcsx2_auto_detect)"
     _settings="$( \
-      _usr_get)/games/${app_id}/inis"
+      _usr_get)/games/${app_id}/${_pcsx2}"
   fi
   _set_override \
     "game" \
