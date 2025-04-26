@@ -575,6 +575,7 @@ _game_launcher_auto_detect() {
   _os="$( \
     uname \
       -o)"
+  _game_platform=""
   if [[ -v "override_game_platform" ]]; then
     _game_platform="${override_game_platform}"
   fi
