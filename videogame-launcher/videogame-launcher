@@ -217,26 +217,45 @@ _pcsx2_launch() {
     _fullscreen="${4}" \
     _pcsx2_opts=() \
     _game_path \
-    _pcsx2
+    _pcsx2 \
+    _pcsx2_ver \
+    _game_dir
+  _config_dir_user="${HOME}/.config/${_app_id}"
   _pcsx2="$( \
     _pcsx2_auto_detect)"
+  _pcsx2_ver="$( \
+    basename \
+      "${_pcsx2}")"
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
+  _game_dir="$( \
+    dirname \
+      "${_game_path}")"
+  if [[ -d "${_settings}" ]]; then
+    if [[ ! -d "${_config_dir_user}" ]]; then
+      mkdir \
+        -p \
+	"${_config_dir_user}"
+      cp \
+        -r \
+	"${_config_dir_user}"
+    fi
+  fi
   _pcsx2_opts=(
-    -config
-      "${_settings}"
+    --cfgpath
+      "${_config_dir_user}/inis/${_pcsx2_ver}"
+    --fullboot
   )
   if [[ "${_fullscreen}" == "y" ]]; then
-    _duckstation_opts+=(
-      -fullscreen
+    _pcsx2_opts+=(
+      --fullscreen
     )
   fi
-  duckstation-nogui \
-    "${_duckstation_opts[@]}" \
+  "${_pcsx2}" \
+    "${_pcsx2_opts[@]}" \
     "${_game_path}"
 }
-
 
 _retroarch_launch() {
   local \
@@ -485,8 +504,13 @@ _game_lang_auto_detect() {
 _game_settings_auto_detect() {
   local \
     _settings
-  _settings="$( \
-    _usr_get)/games/${app_id}/${app_id}.settings.ini"
+  if [[ "${_launcher}" == "duckstation" ]]; then
+    _settings="$( \
+      _usr_get)/games/${app_id}/${app_id}.settings.ini"
+  elif [[ "${_launcher}" == "pcsx2" ]]; then
+    _settings="$( \
+      _usr_get)/games/${app_id}/inis"
+  fi
   _set_override \
     "game" \
     "settings" \
