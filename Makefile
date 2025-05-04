@@ -41,7 +41,7 @@ DOC_FILES=\
   $(wildcard \
       *.rst)
 _BASH_FILES=\
-  videogame-launcher
+  $(_PROJECT)
 
 all:
 
