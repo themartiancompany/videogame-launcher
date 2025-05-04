@@ -189,12 +189,15 @@ _duckstation_launch() {
     _settings="${3}" \
     _fullscreen="${4}" \
     _duckstation_opts=() \
-    _game_path
+    _game_path \
+    _msg=()
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
+  _msg_info \
+    "Running '${_game_path}'."
   _duckstation_opts=(
-    -config
+    -settings
       "${_settings}"
   )
   if [[ "${_fullscreen}" == "y" ]]; then
@@ -202,6 +205,12 @@ _duckstation_launch() {
       -fullscreen
     )
   fi
+  _msg=(
+    "Running 'duckstation-nogui'"
+    "with options '${_duckstation_opts[*]}'."
+  )
+  _msg_info \
+    "${_msg[*]}"
   duckstation-nogui \
     "${_duckstation_opts[@]}" \
     "${_game_path}"
