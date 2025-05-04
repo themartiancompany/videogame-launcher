@@ -548,6 +548,7 @@ _game_settings_auto_detect() {
     _settings \
     _pcsx2
   _launcher="${game_launcher}"
+  _settings=""
   if [[ "${_launcher}" == "duckstation" ]]; then
     _settings="$( \
       _usr_get)/games/${app_id}/${app_id}.settings.ini"
