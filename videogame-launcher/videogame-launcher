@@ -150,7 +150,7 @@ _retroarch_requirements() {
   fi
 }
 
-_mame_requirements() {
+_scummvm_requirements() {
   _check_cmd \
     'scummvm'
 }
