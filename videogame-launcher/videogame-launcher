@@ -407,7 +407,7 @@ _gearboy_launch() {
     _lang="${2}" \
     _fullscreen="${3}" \
     _game_path \
-    _fceux_opts=()
+    _gearboy_opts=()
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
@@ -420,6 +420,34 @@ _gearboy_launch() {
     "${_gearboy_opts[@]}" \
     "${_game_path}"
 }
+
+_scummvm_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _settings="${3}" \
+    _fullscreen="${4}" \
+    _game_path \
+    _scummvm_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _scummvm_opts+=(
+      -f
+    )
+  fi
+  _scummvm_opts+=(
+    --path="${_game_path}"
+  )
+  scummvm \
+    "${_scummvm_opts[@]}" \
+    "${_settings}"
+    # --path="/usr/games/com.lucasarts.TheSecretOfMonkeyIsland/it" \
+    # "monkeyEGA"
+}
+
+
 
 _game_launcher_opts_get() {
   if [[ "${_game_launcher}" == "duckstation" ]]; then
@@ -458,6 +486,13 @@ _game_launcher_opts_get() {
     _launch_opts+=(
       "${_app_id}"
       "${_lang}"
+      "${_fullscreen}"
+    )
+  elif [[ "${_game_launcher}" == "scummvm" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      "${_settings}"
       "${_fullscreen}"
     )
   else
@@ -514,16 +549,18 @@ Usage:
   options:
      -e <game_launcher>     It can be 'duckstation',
                             'fceux', 'gearboy', 'mame',
-			    'retroarch', 'pcsx2'.
+                            'retroarch', 'pcsx2', 'scummvm'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
 			    'mame2010', 'nes', 'gameboy',
-                            'playstation2'.
+                            'playstation2', or 'scummvm'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
-     -s <game_settings>     Duckstation settings file.
+     -s <game_settings>     Depending on the selected game launcher
+                            it can be a Duckstation settings file or
+                            the name for a SCUMMVM game platform.
                             Default: ${game_settings}
      -f                     Launch the game in full-screen.
                             Default: ${fullscreen_enabled}
@@ -634,6 +671,8 @@ _retroarch_platform_auto_detect() {
     _platform="playstation"
   elif [[ "${_game_path}" == *".iso" ]]; then
     _platform="playstation2"
+  elif [[ -d "${_game_path}" ]]; then
+    _platform="scummvm"
   fi
 }
 
@@ -654,6 +693,8 @@ _game_platform_auto_detect() {
   elif [[ "${game_launcher}" == "$(_lower \
 	                             "pcsx2")"* ]]; then
     _platform="playstation2"
+  elif [[ "${game_launcher}" == "scummvm" ]]; then
+    _platform="scummvm"	
   fi
   _set_override \
     "game" \
