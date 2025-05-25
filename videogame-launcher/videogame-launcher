@@ -325,6 +325,7 @@ _retroarch_launch() {
     _app_id="${1}" \
     _platform="${2}" \
     _lang="${3}" \
+    _hud="${4}" \
     _os \
     _game_path \
     _cores_path \
@@ -367,7 +368,7 @@ _retroarch_launch() {
             'LIBRETRO'
             "${_platform_core_path}"  
     )
-    if [[ "${_platform}" == "scummvm" ]]; then
+    if [[ "${_hud}" == "y" ]]; then
     _cmd+=(
       -e
         'CONFIGFILE'
@@ -467,11 +468,7 @@ _scummvm_launch() {
   scummvm \
     "${_scummvm_opts[@]}" \
     "${_settings}"
-    # --path="/usr/games/com.lucasarts.TheSecretOfMonkeyIsland/it" \
-    # "monkeyEGA"
 }
-
-
 
 _game_launcher_opts_get() {
   if [[ "${_game_launcher}" == "duckstation" ]]; then
@@ -493,6 +490,7 @@ _game_launcher_opts_get() {
       "${_app_id}"
       "${_game_platform}"
       "${_lang}"
+      "${_hud}"
     )
   elif [[ "${_game_launcher}" == "fceux" ]]; then
     _launch_opts+=(
@@ -532,8 +530,9 @@ _videogame_launcher() {
     _game_launcher="${2}" \
     _game_platform="${3}" \
     _lang="${4}" \
-    _settings="${5}" \
-    _fullscreen="${6}" \
+    _hud="${5}" \
+    _settings="${6}" \
+    _fullscreen="${7}" \
     _launch_opts=()
   "_${_game_launcher}_requirements"
   _game_launcher_opts_get
