@@ -660,12 +660,17 @@ _game_launcher_auto_detect() {
 
 _retroarch_platform_auto_detect() {
   local \
-    _game_path
+    _game_path \
+    _game_lang
+  _game_lang="${game_lang}"
+  if [[ -v "override_game_lang" ]]; then
+    _game_lang="${override_game_lang}"
+  fi
   _msg_info \
     "Retroarch platform auto-detect."
   _game_path_get \
       "${app_id}" \
-      "${game_lang}"
+      "${_game_lang}"
   _msg_info \
     "Game path: ${_game_path}."
   if [[ "${_game_path}" == *".nes" ]]; then
