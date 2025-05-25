@@ -47,6 +47,7 @@ _global_variables() {
   game_launcher=""
   game_platform=""
   game_lang=""
+  game_hud=""
   game_settings=""
   fullscreen_enabled=""
   color=""
@@ -189,6 +190,9 @@ _game_path_get() {
   elif [[ -d "${_path}" ]]; then
     _game_path="${_path}"
   fi
+  _game_path="$( \
+    realpath \
+      "${_game_path}")"
 }
 
 _duckstation_launch() {
@@ -332,6 +336,8 @@ _retroarch_launch() {
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
+  _msg_info \
+    "Running '${_game_path}'."
   if [[ "${_os}" == "Android" ]]; then
     _cores_path="/data/user/0/com.retroarch/cores"
     if [[ "${_platform}" == "arcade" ]]; then
@@ -361,6 +367,13 @@ _retroarch_launch() {
             'LIBRETRO'
             "${_platform_core_path}"  
     )
+    if [[ "${_platform}" == "scummvm" ]]; then
+    _cmd+=(
+      -e
+        'CONFIGFILE'
+        '/storage/emulated/0/Android/data/com.retroarch/files/retroarch.cfg'
+    )
+    fi
     su \
       -c \
         "${_cmd[*]}"
@@ -536,6 +549,7 @@ _show_config() {
   _msg_info "            Game launcher:   ${game_launcher}"
   _msg_info "            Game platform:   ${game_platform}"
   _msg_info "            Game language:   ${game_lang}"
+  _msg_info "                 Game HUD:   ${game_hud}"
   _msg_info "            Game settings:   ${game_settings}"
   _msg_info "       Fullscreen enabled:   ${fullscreen_enabled}"
 }
@@ -569,6 +583,8 @@ Usage:
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
+     -H                     Enables on-screen controller HUD.
+                            Default: ${game_hud}
      -s <game_settings>     Depending on the selected game launcher
                             it can be a Duckstation settings file or
                             the name for a SCUMMVM game platform.
@@ -718,6 +734,23 @@ _game_platform_auto_detect() {
     "${_platform}"
 }
 
+_game_hud_auto_detect() {
+  local \
+    _os \
+    _game_hud
+  _os="$( \
+    uname \
+      -o)"
+  _game_hud="n"
+  if [[ "${_os}" == "Android" ]]; then
+    _game_hud="y"
+  fi
+  _set_override \
+    "game" \
+    "hud" \
+    "${_game_hud}"
+}
+
 _set_overrides() {
   local \
     _app_id
@@ -739,6 +772,7 @@ _set_overrides() {
   _game_launcher_auto_detect
   _game_platform_auto_detect
   _game_lang_auto_detect
+  _game_hud_auto_detect
   _game_settings_auto_detect
 }
 
@@ -747,13 +781,14 @@ _global_variables
 _requirements
 while \
   getopts \
-    'e:p:l:s:cvh?' \
+    'e:p:l:H:s:cvh?' \
     arg; do
   case \
     "${arg}" in
     e) override_game_launcher="${OPTARG}" ;;
     p) override_game_platform="${OPTARG}" ;;
     l) override_game_lang="${OPTARG}" ;;
+    H) override_game_hud="y" ;;
     s) override_game_settings="${OPTARG}" ;;
     f) override_fullscreen_enabled="y" ;;
     c) override_color="y" ;;
@@ -795,6 +830,7 @@ app_opts=(
   "${game_launcher}"
   "${game_platform}"
   "${game_lang}"
+  "${game_hud}"
   "${game_settings}"
   "${fullscreen_enabled}"
 )
