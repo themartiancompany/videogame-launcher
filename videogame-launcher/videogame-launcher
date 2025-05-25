@@ -150,6 +150,11 @@ _retroarch_requirements() {
   fi
 }
 
+_mame_requirements() {
+  _check_cmd \
+    'scummvm'
+}
+
 _game_dir_get() {
   local \
     _app_id="${1}" \
