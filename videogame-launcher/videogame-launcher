@@ -340,6 +340,8 @@ _retroarch_launch() {
       _platform_core_path="${_cores_path}/pcsx_rearmed_libretro_android.so"  
     elif [[ "${_platform}" == "gameboy" ]]; then
       _platform_core_path="${_cores_path}/gearboy_libretro_android.so"  
+    elif [[ "${_platform}" == "scummvm" ]]; then
+      _platform_core_path="${_cores_path}/scummvm_libretro_android.so"  
     fi
     _cmd=(
       am
