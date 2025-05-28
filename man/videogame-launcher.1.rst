@@ -54,15 +54,18 @@ Options
 
 -e game_launcher        It can be 'duckstation',
                         'fceux', 'gearboy', 'mame',
-   		        'retroarch', 'pcsx2'.
+   		        'retroarch', 'pcsx2',
+                        'scummvm'.
 -p game_platform        Game platform. It can be
                         'playstation', 'arcade',
-   		        'mame2010', 'nes', 'gameboy',
-                        'playstation2'.
+   		        'mame2010', 'nes', 'nintendo64',
+                        'gameboy', 'playstation2',
+                        'scummvm'.
 -l game_lang            Game languages.
 -H                      Enables on-screen
                         controller HUD.
--s game_settings        Duckstation settings file.
+-s game_settings        It can be a Duckstation settings file
+                        or a SCUMMVM game name.
 -f                      Launch the game in full-screen.
 
 -h                      Display help.
