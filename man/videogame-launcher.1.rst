@@ -55,6 +55,8 @@ Options
    		        'mame2010', 'nes', 'gameboy',
                         'playstation2'.
 -l game_lang            Game languages.
+-H                      Enables on-screen
+                        controller HUD.
 -s game_settings        Duckstation settings file.
 -f                      Launch the game in full-screen.
 
