@@ -147,6 +147,9 @@ _retroarch_requirements() {
     _check_cmd \
       'su' \
       'tsu'
+  elif [[ "${_os}" == "GNU/Linux" ]]; then
+    _check_cmd \
+      "retroarch"
   fi
 }
 
@@ -340,6 +343,8 @@ _retroarch_launch() {
       _platform_core_path="${_cores_path}/mame2010_libretro_android.so"  
     elif [[ "${_platform}" == "nes" ]]; then
       _platform_core_path="${_cores_path}/quicknes_libretro_android.so"  
+    elif [[ "${_platform}" == "nintendo64" ]]; then
+      _platform_core_path="${_cores_path}/mupen64plus_next_gles2_libretro_android.so"  
     elif [[ "${_platform}" == "playstation" ]]; then
       _platform_core_path="${_cores_path}/pcsx_rearmed_libretro_android.so"  
     elif [[ "${_platform}" == "gameboy" ]]; then
@@ -364,6 +369,11 @@ _retroarch_launch() {
     su \
       -c \
         "${_cmd[*]}"
+  elif [[ "${_os}" == "GNU/Linux" ]]; then
+    retroarch \
+      --libretro \
+      "$(_usr_get)/lib/libretro/mupen64plus_next_libretro.so"
+      "${_game_path}"
   fi
 }
 
