@@ -26,6 +26,13 @@ Seamlessly launch videogames.
 Currently supports launching Arcade, NES, SNES,
 GameBoy, PlayStation, PlayStation 2 games.
 
+It works cross-platform on GNU/Linux,
+Android and Windows, so it is a dependency
+of almost all the videogames published on the
+[Ur](
+  https://github.com/themartiancompany/ur)
+uncensorable application store.
+
 This program is written using the
 [Crash Bash](
   https://github.com/themartiancompany/crash-bash)

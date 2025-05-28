@@ -43,6 +43,11 @@ Description
 
 Seamlessly launch videogames.
 
+It works cross-platform on GNU/Linux,
+Android and Windows, so it is a dependency
+of almost all the videogames published on the
+Ur application store.
+
 
 Options
 ========
