@@ -589,8 +589,8 @@ Usage:
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
-			    'mame2010', 'nes', 'gameboy',
-                            'playstation2', or 'scummvm'.
+			    'mame2010', 'nes', 'nintendo64',
+			    'gameboy', 'playstation2', or 'scummvm'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
