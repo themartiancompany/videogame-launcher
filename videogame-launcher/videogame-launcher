@@ -350,6 +350,8 @@ _retroarch_launch() {
       _platform_core_path="${_cores_path}/mame_libretro_android.so"  
     elif [[ "${_platform}" == "mame2010" ]]; then
       _platform_core_path="${_cores_path}/mame2010_libretro_android.so"  
+    elif [[ "${_platform}" == "mame2003" ]]; then
+      _platform_core_path="${_cores_path}/mame2003_plus_libretro_android.so"  
     elif [[ "${_platform}" == "nes" ]]; then
       _platform_core_path="${_cores_path}/quicknes_libretro_android.so"  
     elif [[ "${_platform}" == "nintendo64" ]]; then
