@@ -819,24 +819,32 @@ while \
     arg; do
   case \
     "${arg}" in
-    e) override_game_launcher="${OPTARG}" ;;
-    p) override_game_platform="${OPTARG}" ;;
-    l) override_game_lang="${OPTARG}" ;;
-    H) override_game_hud="y" ;;
-    s) override_game_settings="${OPTARG}" ;;
-    f) override_fullscreen_enabled="y" ;;
-    c) override_color="y" ;;
-    v) override_quiet="n" ;;
-    h|?) _set_overrides && \
-         _usage \
-           0 ;;
-    *)
-    _msg_error \
-      "Invalid argument '${arg}'" \
-      0
-    _usage \
-      1
-    ;;
+    e) \
+      override_game_launcher="${OPTARG}" ;;
+    p) \
+      override_game_platform="${OPTARG}" ;;
+    l) \
+      override_game_lang="${OPTARG}" ;;
+    H) \
+      override_game_hud="y" ;;
+    s) \
+      override_game_settings="${OPTARG}" ;;
+    f) \
+      override_fullscreen_enabled="y" ;;
+    c) \
+      override_color="y" ;;
+    v) \
+      override_quiet="n" ;;
+    h|?) \
+      _set_overrides
+      _usage \
+        0 ;;
+    *) \
+      _msg_error \
+        "Invalid argument '${arg}'" \
+        0
+      _usage \
+        1 ;;
   esac
 done
 shift \
