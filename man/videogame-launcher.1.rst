@@ -53,14 +53,14 @@ Options
 ========
 
 -e game_launcher        It can be 'duckstation',
-                        'fceux', 'gearboy', 'mame',
-   		        'retroarch', 'pcsx2',
+                        'fceux', 'gearboy', 'love',
+                        'mame', 'retroarch', 'pcsx2',
                         'scummvm'.
 -p game_platform        Game platform. It can be
                         'playstation', 'arcade',
-   		        'mame2010', 'nes', 'nintendo64',
-                        'gameboy', 'playstation2',
-                        'scummvm'.
+   		        'love', 'mame2010', 'nes',
+                        'nintendo64', 'gameboy',
+                        'playstation2', 'scummvm'.
 -l game_lang            Game languages.
 -H                      Enables on-screen
                         controller HUD.

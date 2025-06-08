@@ -23,8 +23,9 @@
 
 Seamlessly launch videogames.
 
-Currently supports launching Arcade, NES, SNES,
-GameBoy, PlayStation, PlayStation 2 games.
+Currently supports launching Arcade games,
+NES, Nintendo 64, SNES, GameBoy, Love,
+PlayStation, PlayStation 2 games.
 
 It works cross-platform on GNU/Linux,
 Android and Windows, so it is a dependency
