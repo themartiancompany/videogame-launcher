@@ -475,8 +475,8 @@ _love_launch() {
       # --fullscreen
     )
   fi
-  gearboy \
-    "${_gearboy_opts[@]}" \
+  love \
+    "${_love_opts[@]}" \
     "${_game_path}"
 }
 
