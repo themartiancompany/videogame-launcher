@@ -460,6 +460,27 @@ _gearboy_launch() {
     "${_game_path}"
 }
 
+_love_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _love_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _love_opts+=(
+      # --fullscreen
+    )
+  fi
+  gearboy \
+    "${_gearboy_opts[@]}" \
+    "${_game_path}"
+}
+
+
 _scummvm_launch() {
   local \
     _app_id="${1}" \
