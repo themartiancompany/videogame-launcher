@@ -195,12 +195,13 @@ _game_path_get() {
         )
 	_msg_error \
           "${_msg[*]}" \
-	  1
+	  0
       fi
     fi
     _game_path="$( \
       cat \
-        "${_path}")"
+        "${_path}" || \
+      true)"
   elif [[ -d "${_path}" ]]; then
     _game_path="${_path}"
   fi
@@ -750,6 +751,8 @@ _retroarch_platform_auto_detect() {
     _platform="playstation2"
   elif [[ -d "${_game_path}" ]]; then
     _platform="scummvm"
+  elif [[ "${_game_path}" == "" ]]; then
+
   fi
 }
 
