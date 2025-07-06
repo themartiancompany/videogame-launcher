@@ -58,6 +58,12 @@ _requirements() {
   true
 }
 
+_doomretro_requirements() {
+  _check_cmd \
+    'doomretro' \
+    'doomretro'
+}
+
 _duckstation_requirements() {
   _check_cmd \
     'duckstation-nogui' \
@@ -208,6 +214,26 @@ _game_path_get() {
   _game_path="$( \
     realpath \
       "${_game_path}")"
+}
+
+_doomretro_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _doomretro_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _doomretro_opts+=(
+      --fullscreen
+    )
+  fi
+  doomretro \
+    "${_doomretro_opts[@]}" \
+    "${_game_path}"
 }
 
 _duckstation_launch() {
@@ -518,7 +544,14 @@ _scummvm_launch() {
 }
 
 _game_launcher_opts_get() {
-  if [[ "${_game_launcher}" == "duckstation" ]]; then
+  if [[ "${_game_launcher}" == "doomretro" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      # "${_settings}"
+      "${_fullscreen}"
+    )
+  elif [[ "${_game_launcher}" == "duckstation" ]]; then
     _launch_opts+=(
       "${_app_id}"
       "${_lang}"
@@ -618,13 +651,14 @@ Usage:
     <app_id>
 
   options:
-     -e <game_launcher>     It can be 'duckstation',
-                            'fceux', 'gearboy', 'mame',
+     -e <game_launcher>     It can be 'doomretro',
+                            'duckstation', 'fceux',
+                            'gearboy', 'mame',
                             'retroarch', 'pcsx2', 'scummvm'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
-			    'mame2010', 'nes', 'nintendo64',
+			    'doom' 'mame2010', 'nes', 'nintendo64',
 			    'gameboy', 'playstation2', or 'scummvm'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
@@ -712,6 +746,8 @@ _game_launcher_auto_detect() {
     _launcher="duckstation"
     if [[ "${_game_platform}" == "arcade" ]]; then
       _launcher="mame"
+    elif [[ "${_game_platform}" == "doom" ]]; then
+      _launcher="doomretro"
     elif [[ "${_game_platform}" == "gameboy" ]]; then
       _launcher="gearboy"
     elif [[ "${_game_platform}" == "playstation2" ]]; then
@@ -724,10 +760,32 @@ _game_launcher_auto_detect() {
     "${_launcher}"
 }
 
+_dreamcast_auto_detect() {
+  local \
+    _dir="${1}"
+}
+
+_platform_find() {
+  local \
+    _platform="${1}" \
+    _game_dir
+  _game_dir="$( \
+    _game_dir_get \
+      "${app_id}")"
+  _platform_game_dir="${_game_dir}/${_platform}"
+  if [[ -d "${_platform_game_dir}" ]]; then
+    platforms+=(
+      "${_platform}"
+    )
+  fi
+}
+
 _retroarch_platform_auto_detect() {
   local \
     _game_path \
-    _game_lang
+    _game_lang \
+    _game_dir \
+    _platforms=()
   _game_lang="${game_lang}"
   if [[ -v "override_game_lang" ]]; then
     _game_lang="${override_game_lang}"
@@ -749,10 +807,18 @@ _retroarch_platform_auto_detect() {
     _platform="playstation"
   elif [[ "${_game_path}" == *".iso" ]]; then
     _platform="playstation2"
+  elif [[ "${_game_path}" == *".wad" || \
+	  "${_game_path}" == *".WAD" ]]; then
+    _platform="doom"
   elif [[ -d "${_game_path}" ]]; then
     _platform="scummvm"
   elif [[ "${_game_path}" == "" ]]; then
-
+    _game_dir="$( \
+      _game_dir_get \
+        "${app_id}")"
+    if [[ "$(ls "${_game_dir}/"*".cdi")" != "" ]]; then
+      ""
+    fi
   fi
 }
 
@@ -760,7 +826,9 @@ _game_platform_auto_detect() {
   local \
     _platform
   _platform=""
-  if [[ "${game_launcher}" == "duckstation" ]]; then
+  if [[ "${game_launcher}" == "doomretro" ]]; then
+    _platform="doom"
+  elif [[ "${game_launcher}" == "duckstation" ]]; then
     _platform="playstation"
   elif [[ "${game_launcher}" == "fceux" ]]; then
     _platform="nes"
@@ -867,17 +935,14 @@ shift \
   ))
 if (( $# < 1 )); then
   _msg_error \
-    "No app id given." \
+    "No Application ID given." \
     0
   _set_overrides
   _usage \
     1
 fi
 if (( 0 < $# )); then
-  _set \
-    "app" \
-    "id" \
-    "${1}"
+  app_id="${1}"
 fi
 _set_overrides
 _show_config
