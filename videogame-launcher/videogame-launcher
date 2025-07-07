@@ -420,10 +420,8 @@ _retroarch_launch() {
     _cores_path="/data/user/0/com.retroarch/cores"
     if [[ "${_platform}" == "arcade" ]]; then
       _core_name="mame2000"
-      _platform_core_path="${_cores_path}/mame2000_libretro_android.so"  
     elif [[ "${_platform}" == "doom" ]]; then
       _core_name="prboom"
-      _platform_core_path="${_cores_path}/prboom_libretro_android.so"  
     elif [[ "${_platform}" == "mame" ]]; then
       _core_name="${_platform}"
     elif [[ "${_platform}" == "mame2010" ]]; then
@@ -441,7 +439,7 @@ _retroarch_launch() {
     elif [[ "${_platform}" == "scummvm" ]]; then
       _core_name="${_platform}"
     fi
-    _platform_core_path="${_core_name}_libretro_android.so"
+    _platform_core_path="${_cores_path}/${_core_name}_libretro_android.so"
     _cmd=(
       am
         start \
