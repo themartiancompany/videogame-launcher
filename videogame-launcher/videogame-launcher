@@ -438,6 +438,13 @@ _retroarch_launch() {
       _core_name="gearboy"
     elif [[ "${_platform}" == "scummvm" ]]; then
       _core_name="${_platform}"
+    else
+      _msg=(
+        "Unknown platform '${_platform}'."
+      )
+      _msg_error \
+        "${_msg[*]}" \
+	1
     fi
     _platform_core_path="${_cores_path}/${_core_name}_libretro_android.so"
     _cmd=(
