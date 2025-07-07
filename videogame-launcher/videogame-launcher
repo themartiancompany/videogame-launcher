@@ -402,6 +402,7 @@ _retroarch_launch() {
     _platform="${2}" \
     _lang="${3}" \
     _hud="${4}" \
+    _core_name \
     _os \
     _game_path \
     _cores_path \
@@ -418,24 +419,29 @@ _retroarch_launch() {
   if [[ "${_os}" == "Android" ]]; then
     _cores_path="/data/user/0/com.retroarch/cores"
     if [[ "${_platform}" == "arcade" ]]; then
+      _core_name="mame2000"
       _platform_core_path="${_cores_path}/mame2000_libretro_android.so"  
+    if [[ "${_platform}" == "doom" ]]; then
+      _core_name="prboom"
+      _platform_core_path="${_cores_path}/prboom_libretro_android.so"  
     elif [[ "${_platform}" == "mame" ]]; then
-      _platform_core_path="${_cores_path}/mame_libretro_android.so"  
+      _core_name="${_platform}"
     elif [[ "${_platform}" == "mame2010" ]]; then
-      _platform_core_path="${_cores_path}/mame2010_libretro_android.so"  
+      _core_name="${_platform}"
     elif [[ "${_platform}" == "mame2003" ]]; then
-      _platform_core_path="${_cores_path}/mame2003_plus_libretro_android.so"  
+      _core_name="${_platform}_plus"
     elif [[ "${_platform}" == "nes" ]]; then
-      _platform_core_path="${_cores_path}/quicknes_libretro_android.so"  
+      _core_name="quick${_platform}"
     elif [[ "${_platform}" == "nintendo64" ]]; then
-      _platform_core_path="${_cores_path}/mupen64plus_next_gles2_libretro_android.so"  
+      _core_name="mupen64plus_next_gles2"
     elif [[ "${_platform}" == "playstation" ]]; then
-      _platform_core_path="${_cores_path}/pcsx_rearmed_libretro_android.so"  
+      _core_name="pcsx_rearmed"
     elif [[ "${_platform}" == "gameboy" ]]; then
-      _platform_core_path="${_cores_path}/gearboy_libretro_android.so"  
+      _core_name="gearboy"
     elif [[ "${_platform}" == "scummvm" ]]; then
-      _platform_core_path="${_cores_path}/scummvm_libretro_android.so"  
+      _core_name="${_platform}"
     fi
+    _platform_core_path="${_core_name}_libretro_android.so"
     _cmd=(
       am
         start \
