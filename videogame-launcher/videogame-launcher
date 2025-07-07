@@ -217,18 +217,29 @@ _game_path_get() {
     _app_id="${1}" \
     _lang="${2}" \
     _game_dir \
-    _path
+    _path \
+    _msg=()
   _game_dir="$( \
     _game_dir_get \
       "${_app_id}")"
   _path="${_game_dir}/${_lang}"
   if [[ ! -d "${_path}" ]]; then
     if [[ ! -f "${_path}" ]]; then
-      echo \
-        "No support for language '${_lang}'"
-      echo \
-        "Running default language 'any'"
       _path="${_game_dir}/any"
+      _msg=(
+        "No support for language '${_lang}'."
+        "Running default language 'any'."
+      )
+      _msg_warning \
+        "${_msg[*]}"
+      if [[ ! -d "${_path}" ]]; then
+	_msg=(
+          "Found no file to launch."
+        )
+	_msg_error \
+          "${_msg[*]}" \
+	  1
+      fi
     fi
     _game_path="$( \
       cat \
@@ -502,6 +513,27 @@ _gearboy_launch() {
     "${_gearboy_opts[@]}" \
     "${_game_path}"
 }
+
+_love_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _love_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _love_opts+=(
+      # --fullscreen
+    )
+  fi
+  love \
+    "${_love_opts[@]}" \
+    "${_game_path}"
+}
+
 
 _scummvm_launch() {
   local \
@@ -848,24 +880,32 @@ while \
     arg; do
   case \
     "${arg}" in
-    e) override_game_launcher="${OPTARG}" ;;
-    p) override_game_platform="${OPTARG}" ;;
-    l) override_game_lang="${OPTARG}" ;;
-    H) override_game_hud="y" ;;
-    s) override_game_settings="${OPTARG}" ;;
-    f) override_fullscreen_enabled="y" ;;
-    c) override_color="y" ;;
-    v) override_quiet="n" ;;
-    h|?) _set_overrides && \
-         _usage \
-           0 ;;
-    *)
-    _msg_error \
-      "Invalid argument '${arg}'" \
-      0
-    _usage \
-      1
-    ;;
+    e) \
+      override_game_launcher="${OPTARG}" ;;
+    p) \
+      override_game_platform="${OPTARG}" ;;
+    l) \
+      override_game_lang="${OPTARG}" ;;
+    H) \
+      override_game_hud="y" ;;
+    s) \
+      override_game_settings="${OPTARG}" ;;
+    f) \
+      override_fullscreen_enabled="y" ;;
+    c) \
+      override_color="y" ;;
+    v) \
+      override_quiet="n" ;;
+    h|?) \
+      _set_overrides
+      _usage \
+        0 ;;
+    *) \
+      _msg_error \
+        "Invalid argument '${arg}'" \
+        0
+      _usage \
+        1 ;;
   esac
 done
 shift \
