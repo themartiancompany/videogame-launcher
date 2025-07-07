@@ -421,7 +421,7 @@ _retroarch_launch() {
     if [[ "${_platform}" == "arcade" ]]; then
       _core_name="mame2000"
       _platform_core_path="${_cores_path}/mame2000_libretro_android.so"  
-    if [[ "${_platform}" == "doom" ]]; then
+    elif [[ "${_platform}" == "doom" ]]; then
       _core_name="prboom"
       _platform_core_path="${_cores_path}/prboom_libretro_android.so"  
     elif [[ "${_platform}" == "mame" ]]; then
