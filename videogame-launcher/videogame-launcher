@@ -64,6 +64,49 @@ _duckstation_requirements() {
     'duckstation'
 }
 
+_love_requirements() {
+  local \
+    _msg=() \
+    _love_found \
+    _os
+  _os="$( \
+    uname \
+      -o)"
+  if [[ "${_os}" == "Android" ]]; then
+    _check_cmd \
+      "termux-open" \
+      "termux-tools"
+    _check_cmd \
+      "pacman"
+    _love_found="$( \
+      pacman \
+        -Q \
+	"love-android")"
+    if [[ "${_love_found}" == "" ]]; then
+      _msg=(
+        "Not found love for Android."
+      )
+      _msg_error \
+        "${_msg[*]}" \
+	0
+      _check_cmd \
+        "su" \
+        "tsu"
+      su \
+        -c \
+    fi
+  elif [[ "${_os}" == "GNU/Linux" ]]; then
+    _check_cmd \
+      "love"
+  fi
+  _check_cmd \
+    "tsu"
+  _check_cmd \
+    'duckstation-nogui' \
+    'duckstation'
+}
+
+
 _pcsx2_requirements() {
   local \
     _pcsx2 \
@@ -586,13 +629,15 @@ Usage:
 
   options:
      -e <game_launcher>     It can be 'duckstation',
-                            'fceux', 'gearboy', 'mame',
-                            'retroarch', 'pcsx2', 'scummvm'.
+                            'fceux', 'gearboy', 'love',
+			    'mame', 'retroarch', 'pcsx2',
+			    'scummvm'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
-			    'mame2010', 'nes', 'nintendo64',
-			    'gameboy', 'playstation2', or 'scummvm'.
+			    'love', 'mame2010', 'nes',
+			    'nintendo64', 'gameboy',
+			    'playstation2', or 'scummvm'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
@@ -685,6 +730,9 @@ _game_launcher_auto_detect() {
       _launcher="pcsx2"
     fi
   fi
+  if [[ "${_game_platform}" == "love" ]]; then
+    _launcher="love"
+  fi
   _set_override \
     "game" \
     "launcher" \
@@ -733,6 +781,8 @@ _game_platform_auto_detect() {
     _platform="gameboy"
   elif [[ "${game_launcher}" == "mame" ]]; then
     _platform="arcade"
+  elif [[ "${game_launcher}" == "love" ]]; then
+    _platform="love"
   elif [[ "${game_launcher}" == "retroarch" ]]; then
     _retroarch_platform_auto_detect
   elif [[ "${game_launcher}" == "$(_lower \
