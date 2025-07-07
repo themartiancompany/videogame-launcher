@@ -52,14 +52,14 @@ Ur application store.
 Options
 ========
 
--e game_launcher        It can be 'duckstation',
+-e game_launcher        It can be 'doom', 'duckstation',
                         'fceux', 'gearboy', 'love',
                         'mame', 'retroarch', 'pcsx2',
                         'scummvm'.
 -p game_platform        Game platform. It can be
                         'playstation', 'arcade',
-   		        'love', 'mame2010', 'nes',
-                        'nintendo64', 'gameboy',
+   		        'doom', 'love', 'mame2010',
+                        'nes', 'nintendo64', 'gameboy',
                         'playstation2', 'scummvm'.
 -l game_lang            Game languages.
 -H                      Enables on-screen
