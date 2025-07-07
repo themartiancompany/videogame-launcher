@@ -87,26 +87,23 @@ _love_requirements() {
     _love_found="$( \
       pacman \
         -Q \
-	"love-android")"
+        "love-android")"
     if [[ "${_love_found}" == "" ]]; then
       _msg=(
         "Not found love for Android."
       )
       _msg_error \
         "${_msg[*]}" \
-	0
+        0
       _check_cmd \
         "su" \
         "tsu"
-      su \
-        -c \
     fi
   elif [[ "${_os}" == "GNU/Linux" ]]; then
     _check_cmd \
       "love"
   fi
 }
-
 
 _pcsx2_requirements() {
   local \
