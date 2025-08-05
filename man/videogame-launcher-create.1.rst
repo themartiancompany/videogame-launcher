@@ -22,26 +22,27 @@
 
 
 ====================================
-videogame-launcher
+videogame-launcher-create
 ====================================
 
 --------------------------------------------------------------------------------
-Videogame Launcher
+Videogame Launcher Create Tool
 --------------------------------------------------------------------------------
-:Version: videogame-launcher |version|
+:Version: videogame-launcher-create |version|
 :Manual section: 1
 
 
 Synopsis
 ========
 
-videogame-launcher *[options]* *app_id*
+videogame-launcher-create *[options]* *app_id*
 
 
 Description
 ===========
 
-Seamlessly launch videogames.
+Seamlessly creates launcher for
+videogames.
 
 It works cross-platform on GNU/Linux,
 Android and Windows, so it is a dependency
@@ -86,6 +87,7 @@ Copyright Pellegrino Prevete. AGPL-3.0.
 See also
 ========
 
+* videogame-launcher
 * duckstation-nogui
 * fceux
 * gearboy -h
