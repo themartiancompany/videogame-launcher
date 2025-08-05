@@ -1,0 +1,21 @@
+[Desktop Entry]
+Name=%_title%
+Comment=%pkgdesc%
+Type=Application
+TryExec=mame
+Exec=videogame-launcher -e "%_game_launcher%" -l "%_game_language%" -p "%_game_platform%" "%_app_id%"
+Icon=%_app_id%-%_uuid%
+Terminal=false
+Categories=Game;
+Keywords=MAME
+Actions=preferences;fullscreen;
+
+[Desktop Action fullscreen]
+Name=Launch in fullscreen
+Exec=videogame-launcher -f -e "%_game_launcher%" -l "%_game_language%" -p "%_game_platform%" "%_app_id%"
+
+[Desktop Action preferences]
+Name=Preferences
+Exec=mame
+
+X-Desktop-File-Install-Version=0.26
