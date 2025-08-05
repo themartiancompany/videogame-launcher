@@ -61,6 +61,9 @@ install-scripts:
 	$(_INSTALL_EXE) \
 	  "$(_PROJECT)/$(_PROJECT)" \
 	  "$(BIN_DIR)/$(_PROJECT)"
+	$(_INSTALL_EXE) \
+	  "$(_PROJECT)/$(_PROJECT)-create" \
+	  "$(BIN_DIR)/$(_PROJECT)-create"
 
 install-doc:
 
