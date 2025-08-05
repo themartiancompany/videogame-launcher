@@ -93,6 +93,9 @@ tools is hosted on
 Be aware the mirror could go offline any time as Github and more
 in general all HTTP resources are inherently unstable and censorable.
 
+Newer versions of Videogame Launcher are exclusively sold on the
+Ur. The software stays licensed under a copyleft license.
+
 ## License
 
 This program is released by Pellegrino Prevete under the terms
