@@ -1,0 +1,491 @@
+#!/usr/bin/env bash
+
+#    ----------------------------------------------------------------------
+#    Copyright © 2025  Pellegrino Prevete
+#
+#    All rights reserved
+#    ----------------------------------------------------------------------
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+_bin="$( \
+  dirname \
+    "$( \
+      command \
+        -v \
+	  "env")")"
+_lib="${_bin}/../lib"
+source \
+  "${_lib}/libcrash-bash/crash-bash"
+
+_usr_get() {
+  local \
+    _bin
+  _bin="$( \
+    dirname \
+      "$(command \
+           -v \
+	   "env")")"
+  dirname \
+    "${_bin}"
+}
+
+_global_variables() {
+  launch_date=""
+  app_id=""
+  game_launcher=""
+  game_platform=""
+  game_lang=""
+  game_hud=""
+  game_settings=""
+  fullscreen_enabled=""
+  color=""
+  quiet=""
+}
+
+_requirements() {
+  true
+}
+
+_desktop_file_create() {
+  local \
+    _title="${1}" \
+    _app_id="${2}" \
+    _command="${3}" \
+    _pkgdesc="${3}" \
+    _uuid="${4}" \
+    _emulator="${5}" \
+    _platform="${6}" \
+    _lang="${7}" \
+    _template_file="${8}" \
+    _output_file="${9}" \
+    _usr \
+    _templates_dir \
+    _msg=()
+  msg \
+    "Preparing '${_title}' desktop file."
+  if [[ "${_template_file}" == "" ]]; then
+    _usr="$( \
+      _usr_get)"
+    _templates_dir="${_usr}/share/videogame-launcher/templates"
+    _template_file="${_templates_dir}/${_plaform}.desktop"
+  fi
+  if [[ "${_output_file}" == "" ]]; then
+    _output_file="$( \
+      pwd)/${_app_id}.desktop"
+  fi
+  cp \
+    "${_template_file}" \
+    "${output_file}"
+  sed \
+    -i \
+    "s/%_title%/${_title}/g" \
+    "${_output_file}"
+  sed \
+    -i \
+    "s/%pkgdesc%/${_pkgdesc}/g" \
+    "${_output_file}"
+  sed \
+    -i \
+    "s/%_app_id%/${_app_id}/g" \
+    "${_output_file}"
+  sed \
+    -i "s/%_uuid%/${_uuid}/g" \
+    "${_output_file}"
+  sed \
+    -i \
+    "s/%_game_launcher%/${_emulator}/g" \
+    "${_output_file}"
+  sed \
+    -i \
+    "s/%_game_platform%/playstation2/g" \
+    "${_output_file}"
+  sed \
+    -i \
+    "s/%_game_language%/any/g" \
+    "${_output_file}"
+  sed \
+    -i \
+    "s/%_pkgbase%/${_command}/g" \
+    "${_output_file}"
+}
+
+_videogame_launcher_create() {
+  local \
+    _title="${1}" \
+    _app_id="${2}" \
+    _command="${3}" \
+    _pkgdesc="${3}" \
+    _uuid="${4}" \
+    _emulator="${5}" \
+    _platform="${6}" \
+    _lang="${7}" \
+    _template_file="${8}" \
+    _desktop_file="${9}" \
+    _command_file="${10}"
+  _desktop_file_create \
+    "${_title}" \
+    "${_app_id}" \
+    "${_command}" \
+    "${_uuid}" \
+    "${_emulator}" \
+    "${_platform}" \
+    "${_lang}" \
+    "${_desktop_file}"
+}
+
+# Shows configuration options.
+_show_config() {
+  _msg_info "${app_name} configuration"
+  _msg_info "              Launch date:   ${launch_date}"
+  _msg_info "                   App ID:   ${app_id}"
+  _msg_info "            Game launcher:   ${game_launcher}"
+  _msg_info "            Game platform:   ${game_platform}"
+  _msg_info "            Game language:   ${game_lang}"
+  _msg_info "                 Game HUD:   ${game_hud}"
+  _msg_info "            Game settings:   ${game_settings}"
+  _msg_info "       Fullscreen enabled:   ${fullscreen_enabled}"
+}
+
+_usage() {
+  local \
+    _exit="${1}" \
+    _usage_text
+  IFS='' \
+    read \
+      -r \
+      -d '' \
+      _usage_text << \
+        ENDUSAGETEXT || true
+
+Seamlessly launch videogames.
+
+Usage:
+  ${app_name}
+    <app_id>
+
+  options:
+     -e <game_launcher>     It can be 'doomretro',
+                            'duckstation',
+                            'fceux', 'gearboy', 'love',
+			    'mame', 'retroarch', 'pcsx2',
+			    'scummvm'.
+                            Default: ${game_launcher}
+     -p <game_platform>     Game platform. It can be
+                            'playstation', 'arcade',
+			    'doom', 'love', 'mame2010',
+			    'nes', 'nintendo64', 'gameboy',
+			    'playstation2', or 'scummvm'.
+                            Default: ${game_platform}
+     -l <game_lang>         Game languages.
+                            Default: ${game_lang}
+     -H                     Enables on-screen controller HUD.
+                            Default: ${game_hud}
+     -s <game_settings>     Depending on the selected game launcher
+                            it can be a Duckstation settings file or
+                            the name for a SCUMMVM game platform.
+                            Default: ${game_settings}
+     -f                     Launch the game in full-screen.
+                            Default: ${fullscreen_enabled}
+
+     -h                     This message.
+     -c                     Enable color output
+     -v                     Enable verbose output
+ENDUSAGETEXT
+  _printf \
+    '%s\n' \
+    "${_usage_text}"
+  exit \
+    "${_exit}"
+}
+
+_game_lang_auto_detect() {
+  local \
+    _uage \
+    _lang
+  _uage="${LANG%%.*}"
+  _lang="${_uage%%_*}"
+  _set_override \
+    "game" \
+    "lang" \
+    "${_lang}"
+}
+
+_game_settings_auto_detect() {
+  local \
+    _launcher \
+    _settings \
+    _pcsx2
+  _launcher="${game_launcher}"
+  _settings=""
+  if [[ "${_launcher}" == "duckstation" ]]; then
+    _settings="$( \
+      _usr_get)/games/${app_id}/${app_id}.settings.ini"
+  elif [[ "${_launcher}" == "pcsx2" ]]; then
+    _pcsx2="$( \
+      _pcsx2_auto_detect)"
+    _settings="${HOME}/.config/${app_id}/${_pcsx2}"
+  fi
+  _set_override \
+    "game" \
+    "settings" \
+    "${_settings}"
+  _set_override \
+    "fullscreen" \
+    "enabled" \
+    "n"
+}
+
+_game_launcher_auto_detect() {
+  local \
+    _game_platform \
+    _launcher \
+    _os \
+    _msg=()
+  _os="$( \
+    uname \
+      -o)"
+  _game_platform=""
+  if [[ -v "override_game_platform" ]]; then
+    _game_platform="${override_game_platform}"
+  fi
+  _launcher=""
+  _msg=(
+    "Detecting game launcher"
+    "for platform '${_game_platform}'."
+  )
+  _msg_info \
+    "${_msg[*]}"
+  if [[ "${_os}" == "Android" ]]; then
+    _launcher="retroarch"
+  elif [[ "${_os}" == "GNU/Linux" ]]; then
+    _launcher="duckstation"
+    if [[ "${_game_platform}" == "arcade" ]]; then
+      _launcher="mame"
+    elif [[ "${_game_platform}" == "doom" ]]; then
+      _launcher="doomretro"
+    elif [[ "${_game_platform}" == "gameboy" ]]; then
+      _launcher="gearboy"
+    elif [[ "${_game_platform}" == "playstation2" ]]; then
+      _launcher="pcsx2"
+    fi
+  fi
+  if [[ "${_game_platform}" == "love" ]]; then
+    _launcher="love"
+  fi
+  _set_override \
+    "game" \
+    "launcher" \
+    "${_launcher}"
+}
+
+_dreamcast_auto_detect() {
+  local \
+    _dir="${1}"
+}
+
+_platform_find() {
+  local \
+    _platform="${1}" \
+    _game_dir
+  _game_dir="$( \
+    _game_dir_get \
+      "${app_id}")"
+  _platform_game_dir="${_game_dir}/${_platform}"
+  if [[ -d "${_platform_game_dir}" ]]; then
+    platforms+=(
+      "${_platform}"
+    )
+  fi
+}
+
+_retroarch_platform_auto_detect() {
+  local \
+    _game_path \
+    _game_lang \
+    _game_dir \
+    _platforms=()
+  _game_lang="${game_lang}"
+  if [[ -v "override_game_lang" ]]; then
+    _game_lang="${override_game_lang}"
+  fi
+  _msg_info \
+    "Retroarch platform auto-detect."
+  _game_path_get \
+      "${app_id}" \
+      "${_game_lang}"
+  _msg_info \
+    "Game path: ${_game_path}."
+  if [[ "${_game_path}" == *".nes" ]]; then
+    _platform="nes"
+  elif [[ "${_game_path}" == *".gbc" || \
+	  "${_game_path}" == *".gb" ]]; then
+    _platform="gameboy"
+  elif [[ "${_game_path}" == *".bin" || \
+	  "${_game_path}" == *".cue" ]]; then
+    _platform="playstation"
+  elif [[ "${_game_path}" == *".iso" ]]; then
+    _platform="playstation2"
+  elif [[ "${_game_path}" == *".wad" || \
+	  "${_game_path}" == *".WAD" ]]; then
+    _platform="doom"
+  elif [[ -d "${_game_path}" ]]; then
+    _platform="scummvm"
+  elif [[ "${_game_path}" == "" ]]; then
+    _game_dir="$( \
+      _game_dir_get \
+        "${app_id}")"
+    if [[ "$(ls "${_game_dir}/"*".cdi")" != "" ]]; then
+      ""
+    fi
+  fi
+}
+
+_game_platform_auto_detect() {
+  local \
+    _platform
+  _platform=""
+  if [[ "${game_launcher}" == "doomretro" ]]; then
+    _platform="doom"
+  elif [[ "${game_launcher}" == "duckstation" ]]; then
+    _platform="playstation"
+  elif [[ "${game_launcher}" == "fceux" ]]; then
+    _platform="nes"
+  elif [[ "${game_launcher}" == "gearboy" ]]; then
+    _platform="gameboy"
+  elif [[ "${game_launcher}" == "mame" ]]; then
+    _platform="arcade"
+  elif [[ "${game_launcher}" == "love" ]]; then
+    _platform="love"
+  elif [[ "${game_launcher}" == "retroarch" ]]; then
+    _retroarch_platform_auto_detect
+  elif [[ "${game_launcher}" == "$(_lower \
+	                             "pcsx2")"* ]]; then
+    _platform="playstation2"
+  elif [[ "${game_launcher}" == "scummvm" ]]; then
+    _platform="scummvm"	
+  fi
+  _set_override \
+    "game" \
+    "platform" \
+    "${_platform}"
+}
+
+_game_hud_auto_detect() {
+  local \
+    _os \
+    _game_hud
+  _os="$( \
+    uname \
+      -o)"
+  _game_hud="n"
+  if [[ "${_os}" == "Android" ]]; then
+    _game_hud="y"
+  fi
+  _set_override \
+    "game" \
+    "hud" \
+    "${_game_hud}"
+}
+
+_set_overrides() {
+  local \
+    _app_id
+  _app_id="${app_id}"
+  if [[ -v override_quiet ]]; then
+    quiet="${override_quiet}"
+  elif [[ -z "${quiet}" ]]; then
+    quiet="y"
+  fi
+  if [[ -v override_color ]]; then
+    color="${override_color}"
+  elif [[ -z "${color}" ]]; then
+    color="n"
+  fi
+  _set_override \
+    "launch" \
+    "date" \
+    "$(_get_date_human)"
+  _game_launcher_auto_detect
+  _game_platform_auto_detect
+  _game_lang_auto_detect
+  _game_hud_auto_detect
+  _game_settings_auto_detect
+}
+
+_globals
+_global_variables
+_requirements
+while \
+  getopts \
+    'e:p:l:H:s:cvh?' \
+    arg; do
+  case \
+    "${arg}" in
+    e) \
+      override_game_launcher="${OPTARG}" ;;
+    p) \
+      override_game_platform="${OPTARG}" ;;
+    l) \
+      override_game_lang="${OPTARG}" ;;
+    H) \
+      override_game_hud="y" ;;
+    s) \
+      override_game_settings="${OPTARG}" ;;
+    f) \
+      override_fullscreen_enabled="y" ;;
+    c) \
+      override_color="y" ;;
+    v) \
+      override_quiet="n" ;;
+    h|?) \
+      _set_overrides
+      _usage \
+        0 ;;
+    *) \
+      _msg_error \
+        "Invalid argument '${arg}'" \
+        0
+      _usage \
+        1 ;;
+  esac
+done
+shift \
+  $(( \
+    OPTIND - 1 \
+  ))
+if (( $# < 1 )); then
+  _msg_error \
+    "No Application ID given." \
+    0
+  _set_overrides
+  _usage \
+    1
+fi
+if (( 0 < $# )); then
+  app_id="${1}"
+fi
+_set_overrides
+_show_config
+app_opts=(
+  "${app_id}"
+  "${game_launcher}"
+  "${game_platform}"
+  "${game_lang}"
+  "${game_hud}"
+  "${game_settings}"
+  "${fullscreen_enabled}"
+)
+_videogame_launcher \
+  "${app_opts[@]}"
