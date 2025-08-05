@@ -41,7 +41,8 @@ DOC_FILES=\
   $(wildcard \
       *.rst)
 _BASH_FILES=\
-  $(_PROJECT)
+  $(_PROJECT) \
+  $(_PROJECT)-create
 
 all:
 
