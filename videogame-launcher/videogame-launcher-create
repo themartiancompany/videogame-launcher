@@ -42,44 +42,56 @@ _usr_get() {
 }
 
 _global_variables() {
-  launch_date=""
+  creation_date=""
   app_id=""
+  game_title=""
+  game_command=""
+  game_pkgdesc=""
+  game_uuid=""
   game_launcher=""
   game_platform=""
   game_lang=""
-  game_hud=""
-  game_settings=""
+  template_file=""
+  desktop_file=""
+  command_file=""
   fullscreen_enabled=""
   color=""
   quiet=""
 }
 
 _requirements() {
-  true
+  _check_cmd \
+    "sed"
+  _check_cmd \
+    "cp" \
+    "coreutils"
 }
 
 _desktop_file_create() {
   local \
-    _title="${1}" \
+    _game_title="${1}" \
     _app_id="${2}" \
-    _command="${3}" \
-    _pkgdesc="${3}" \
-    _uuid="${4}" \
-    _emulator="${5}" \
-    _platform="${6}" \
-    _lang="${7}" \
+    _game_command="${3}" \
+    _game_pkgdesc="${3}" \
+    _game_uuid="${4}" \
+    _game_launcher="${5}" \
+    _game_platform="${6}" \
+    _game_lang="${7}" \
     _template_file="${8}" \
     _output_file="${9}" \
     _usr \
     _templates_dir \
     _msg=()
-  msg \
-    "Preparing '${_title}' desktop file."
+  _msg=(
+    "Preparing '${_game_title}' desktop file."
+  )
+  _msg_info \
+    "${_msg[*]}"
   if [[ "${_template_file}" == "" ]]; then
     _usr="$( \
       _usr_get)"
     _templates_dir="${_usr}/share/videogame-launcher/templates"
-    _template_file="${_templates_dir}/${_plaform}.desktop"
+    _template_file="${_templates_dir}/${_game_platform}.desktop"
   fi
   if [[ "${_output_file}" == "" ]]; then
     _output_file="$( \
@@ -90,59 +102,70 @@ _desktop_file_create() {
     "${output_file}"
   sed \
     -i \
-    "s/%_title%/${_title}/g" \
+    "s/%_game_title%/${_game_title}/g" \
     "${_output_file}"
   sed \
     -i \
-    "s/%pkgdesc%/${_pkgdesc}/g" \
+    "s/%_game_pkgdesc%/${_game_pkgdesc}/g" \
     "${_output_file}"
   sed \
     -i \
     "s/%_app_id%/${_app_id}/g" \
     "${_output_file}"
   sed \
-    -i "s/%_uuid%/${_uuid}/g" \
+    -i "s/%_game_uuid%/${_game_uuid}/g" \
     "${_output_file}"
   sed \
     -i \
-    "s/%_game_launcher%/${_emulator}/g" \
+    "s/%_game_launcher%/${_game_launcher}/g" \
     "${_output_file}"
   sed \
     -i \
-    "s/%_game_platform%/playstation2/g" \
+    "s/%_game_platform%/${_game_platform}/g" \
     "${_output_file}"
   sed \
     -i \
-    "s/%_game_language%/any/g" \
+    "s/%_game_lang%/${_game_lang}/g" \
     "${_output_file}"
   sed \
     -i \
-    "s/%_pkgbase%/${_command}/g" \
+    "s/%_game_command%/${_game_command}/g" \
     "${_output_file}"
 }
 
+
+
 _videogame_launcher_create() {
   local \
-    _title="${1}" \
+    _game_title="${1}" \
     _app_id="${2}" \
-    _command="${3}" \
-    _pkgdesc="${3}" \
-    _uuid="${4}" \
-    _emulator="${5}" \
-    _platform="${6}" \
-    _lang="${7}" \
+    _game_command="${3}" \
+    _game_pkgdesc="${3}" \
+    _game_uuid="${4}" \
+    _game_emulator="${5}" \
+    _game_platform="${6}" \
+    _game_lang="${7}" \
     _template_file="${8}" \
     _desktop_file="${9}" \
     _command_file="${10}"
   _desktop_file_create \
-    "${_title}" \
+    "${_game_title}" \
     "${_app_id}" \
-    "${_command}" \
-    "${_uuid}" \
+    "${_game_command}" \
+    "${_game_uuid}" \
     "${_emulator}" \
     "${_platform}" \
-    "${_lang}" \
+    "${_game_lang}" \
     "${_desktop_file}"
+  _command_prepare \
+    "${_game_title}" \
+    "${_app_id}" \
+    "${_game_command}" \
+    "${_game_uuid}" \
+    "${_emulator}" \
+    "${_platform}" \
+    "${_game_lang}" \
+    "${_command_file}"
 }
 
 # Shows configuration options.
@@ -414,7 +437,7 @@ _set_overrides() {
     color="n"
   fi
   _set_override \
-    "launch" \
+    "creation" \
     "date" \
     "$(_get_date_human)"
   _game_launcher_auto_detect
@@ -479,12 +502,17 @@ fi
 _set_overrides
 _show_config
 app_opts=(
+  "${game_title}"
   "${app_id}"
-  "${game_launcher}"
+  "${game_command}"
+  "${game_pkgdesc}"
+  "${game_uuid}"
+  "${game_emulator}"
   "${game_platform}"
   "${game_lang}"
-  "${game_hud}"
-  "${game_settings}"
+  "${template_file}"
+  "${desktop_file}"
+  "${command_file}"
   "${fullscreen_enabled}"
 )
 _videogame_launcher \
