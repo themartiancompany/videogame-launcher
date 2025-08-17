@@ -133,7 +133,19 @@ _desktop_file_create() {
     "${_output_file}"
 }
 
-
+_command_create() {
+  local \
+    _game_title="${1}" \
+    _app_id="${2}" \
+    _game_command="${3}" \
+    _game_uuid="${4}" \
+    _game_emulator="${5}" \
+    _game_platform="${6}" \
+    _game_lang="${7}" \
+    _command_file="${8}" \
+    _command_template
+  _command_template=""
+}
 
 _videogame_launcher_create() {
   local \
@@ -157,7 +169,7 @@ _videogame_launcher_create() {
     "${_platform}" \
     "${_game_lang}" \
     "${_desktop_file}"
-  _command_prepare \
+  _command_create \
     "${_game_title}" \
     "${_app_id}" \
     "${_game_command}" \
@@ -172,12 +184,16 @@ _videogame_launcher_create() {
 _show_config() {
   _msg_info "${app_name} configuration"
   _msg_info "              Launch date:   ${launch_date}"
+  _msg_info "               Game title:   ${game_title}"
   _msg_info "                   App ID:   ${app_id}"
   _msg_info "            Game launcher:   ${game_launcher}"
   _msg_info "            Game platform:   ${game_platform}"
   _msg_info "            Game language:   ${game_lang}"
-  _msg_info "                 Game HUD:   ${game_hud}"
-  _msg_info "            Game settings:   ${game_settings}"
+  _msg_info "         Game description:   ${game_pkgdesc}"
+  _msg_info "                Game UUID:   ${game_uuid}"
+  _msg_info "            Template file:   ${template_file}"
+  _msg_info "             Desktop file:   ${desktop_file}"
+  _msg_info "             Command file:   ${command_file}"
   _msg_info "       Fullscreen enabled:   ${fullscreen_enabled}"
 }
 
@@ -192,7 +208,7 @@ _usage() {
       _usage_text << \
         ENDUSAGETEXT || true
 
-Seamlessly launch videogames.
+Seamlessly create videogame launchers.
 
 Usage:
   ${app_name}
@@ -201,30 +217,38 @@ Usage:
   options:
      -e <game_launcher>     It can be 'doomretro',
                             'duckstation',
-                            'fceux', 'gearboy', 'love',
-			    'mame', 'retroarch', 'pcsx2',
-			    'scummvm'.
+                            'fceux', 'gearboy', 'flycast',
+                            'love', 'mame', 'retroarch',
+                            'pcsx2', 'scummvm'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
-			    'doom', 'love', 'mame2010',
-			    'nes', 'nintendo64', 'gameboy',
-			    'playstation2', or 'scummvm'.
+       	                    'doom', 'dreamcast', 'love',
+                            'mame20'nes', 'nintendo64',
+                            'gameboy', 'playstation2'
+                            or 'scummvm'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
-     -H                     Enables on-screen controller HUD.
+     -t <game_title>        Game full title.
                             Default: ${game_hud}
-     -s <game_settings>     Depending on the selected game launcher
-                            it can be a Duckstation settings file or
-                            the name for a SCUMMVM game platform.
-                            Default: ${game_settings}
-     -f                     Launch the game in full-screen.
+     -U <game_uuid>         The game platform UUID.
+                            Default: ${game_uuid}
+     -d <description>       Game launcher description.
+                            Default: ${game_description}
+     -m <template_file>     Template file to use to write
+                            the launcher.
+                            Default: ${template_file}
+     -o <command_file>      Output command filename.
+                            Default: ${command_file}
+     -f                     Whether to make the launcher offer
+                            to open the game in full-screen.
                             Default: ${fullscreen_enabled}
 
      -h                     This message.
      -c                     Enable color output
      -v                     Enable verbose output
+
 ENDUSAGETEXT
   _printf \
     '%s\n' \
