@@ -72,13 +72,13 @@ _desktop_file_create() {
     _game_title="${1}" \
     _app_id="${2}" \
     _game_command="${3}" \
-    _game_pkgdesc="${3}" \
-    _game_uuid="${4}" \
-    _game_launcher="${5}" \
-    _game_platform="${6}" \
-    _game_lang="${7}" \
-    _template_file="${8}" \
-    _output_file="${9}" \
+    _game_pkgdesc="${4}" \
+    _game_uuid="${5}" \
+    _game_launcher="${6}" \
+    _game_platform="${7}" \
+    _game_lang="${8}" \
+    _template_file="${9}" \
+    _output_file="${10}" \
     _usr \
     _templates_dir \
     _msg=()
@@ -97,6 +97,12 @@ _desktop_file_create() {
     _output_file="$( \
       pwd)/${_app_id}.desktop"
   fi
+  _msg=(
+    "Copying template"
+    "file '${_template_file}'."
+  )
+  _msg_info \
+    "${_msg[*]}"
   cp \
     "${_template_file}" \
     "${output_file}"
@@ -139,7 +145,7 @@ _command_create() {
     _app_id="${2}" \
     _game_command="${3}" \
     _game_uuid="${4}" \
-    _game_emulator="${5}" \
+    _game_launcher="${5}" \
     _game_platform="${6}" \
     _game_lang="${7}" \
     _command_file="${8}" \
@@ -152,29 +158,31 @@ _videogame_launcher_create() {
     _game_title="${1}" \
     _app_id="${2}" \
     _game_command="${3}" \
-    _game_pkgdesc="${3}" \
-    _game_uuid="${4}" \
-    _game_emulator="${5}" \
-    _game_platform="${6}" \
-    _game_lang="${7}" \
-    _template_file="${8}" \
-    _desktop_file="${9}" \
-    _command_file="${10}"
+    _game_pkgdesc="${4}" \
+    _game_uuid="${5}" \
+    _game_launcher="${6}" \
+    _game_platform="${7}" \
+    _game_lang="${8}" \
+    _template_file="${9}" \
+    _desktop_file="${10}" \
+    _command_file="${11}"
   _desktop_file_create \
     "${_game_title}" \
     "${_app_id}" \
     "${_game_command}" \
+    "${_game_pkgdesc}" \
     "${_game_uuid}" \
-    "${_game_emulator}" \
+    "${_game_launcher}" \
     "${_game_platform}" \
     "${_game_lang}" \
+    "${_template_file}" \
     "${_desktop_file}"
   _command_create \
     "${_game_title}" \
     "${_app_id}" \
     "${_game_command}" \
     "${_game_uuid}" \
-    "${_game_emulator}" \
+    "${_game_launcher}" \
     "${_game_platform}" \
     "${_game_lang}" \
     "${_command_file}"
@@ -261,12 +269,10 @@ _game_lang_auto_detect() {
   local \
     _uage \
     _lang
-  _uage="${LANG%%.*}"
-  _lang="${_uage%%_*}"
   _set_override \
     "game" \
     "lang" \
-    "${_lang}"
+    "any"
 }
 
 _game_launcher_auto_detect() {
@@ -344,9 +350,6 @@ _retroarch_platform_auto_detect() {
   fi
   _msg_info \
     "Retroarch platform auto-detect."
-  _game_path_get \
-      "${app_id}" \
-      "${_game_lang}"
   _msg_info \
     "Game path: ${_game_path}."
   if [[ "${_game_path}" == *".nes" ]]; then
@@ -406,12 +409,12 @@ _game_platform_auto_detect() {
 
 _template_file_auto_detect() {
   local \
-    _share \
+    _configs \
     _template_file
-  _share="$( \
-    _get_share)/videogame-launcher"
-  _template_file="${_share}/launchers/${_platform}-template.desktop"
-  _set_overrides \
+  _configs="$( \
+    _get_usr)/share/videogame-launcher/configs"
+  _template_file="${_configs}/launchers/${game_platform}-template.desktop"
+  _set_override \
     "template" \
     "file" \
     "${_template_file}"
@@ -439,6 +442,34 @@ _set_overrides() {
   _game_platform_auto_detect
   _game_lang_auto_detect
   _template_file_auto_detect
+  _set_override \
+    "desktop" \
+    "file" \
+    "$(pwd)/${app_id}.desktop"
+  _set_override \
+    "command" \
+    "file" \
+    "$(pwd)/${_app_id}"
+  _set_override \
+    "fullscreen" \
+    "enabled" \
+    "n"
+  _set_override \
+    "game" \
+    "uuid" \
+    ""
+  _set_override \
+    "game" \
+    "title" \
+    "${_app_id}"
+  _set_override \
+    "game" \
+    "pkgdesc" \
+    "Videogame for ${game_platform}."
+  _set_override \
+    "output" \
+    "file" \
+    "$(pwd)/${_app_id}.desktop"
 }
 
 _globals
@@ -446,22 +477,30 @@ _global_variables
 _requirements
 while \
   getopts \
-    'e:p:l:H:s:cvh?' \
+    'U:e:p:l:t:s:fd:m:o:cvh?' \
     arg; do
   case \
     "${arg}" in
+    U) \
+      override_game_uuid="${OPTARG}" ;;
     e) \
       override_game_launcher="${OPTARG}" ;;
     p) \
       override_game_platform="${OPTARG}" ;;
     l) \
       override_game_lang="${OPTARG}" ;;
-    H) \
-      override_game_hud="y" ;;
+    t) \
+      override_game_title="${OPTARG}" ;;
     s) \
       override_game_settings="${OPTARG}" ;;
     f) \
       override_fullscreen_enabled="y" ;;
+    d) \
+      override_game_pkgdesc="${OPTARG}" ;;
+    m) \
+      override_template_file="${OPTARG}" ;;
+    o) \
+      override_desktop_file="${OPTARG}" ;;
     c) \
       override_color="y" ;;
     v) \
@@ -501,7 +540,7 @@ app_opts=(
   "${game_command}"
   "${game_pkgdesc}"
   "${game_uuid}"
-  "${game_emulator}"
+  "${game_launcher}"
   "${game_platform}"
   "${game_lang}"
   "${template_file}"
@@ -509,5 +548,5 @@ app_opts=(
   "${command_file}"
   "${fullscreen_enabled}"
 )
-_videogame_launcher \
+_videogame_launcher_create \
   "${app_opts[@]}"

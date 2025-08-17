@@ -53,21 +53,26 @@ Ur application store.
 Options
 ========
 
--e game_launcher        It can be 'doom', 'duckstation',
-                        'fceux', 'gearboy', 'love',
-                        'mame', 'retroarch', 'pcsx2',
-                        'scummvm'.
+-e game_launcher        It can be 'doomretro',
+                        'duckstation',
+                        'fceux', 'gearboy', 'flycast',
+                        'love', 'mame', 'retroarch',
+                        'pcsx2', 'scummvm'.
 -p game_platform        Game platform. It can be
                         'playstation', 'arcade',
-   		        'doom', 'love', 'mame2010',
-                        'nes', 'nintendo64', 'gameboy',
-                        'playstation2', 'scummvm'.
+  	                     'doom', 'dreamcast', 'love',
+                        'mame20'nes', 'nintendo64',
+                        'gameboy', 'playstation2'
+                        or 'scummvm'.
 -l game_lang            Game languages.
--H                      Enables on-screen
-                        controller HUD.
--s game_settings        It can be a Duckstation settings file
-                        or a SCUMMVM game name.
--f                      Launch the game in full-screen.
+-t game_title           Game full title.
+-U game_uuid            The game platform UUID.
+-d description          Game launcher description.
+-m template_file        Template file to use to write
+                        the launcher.
+-o command_file         Output command filename.
+-f                      Whether to make the launcher offer
+                        to open the game in full-screen.
 
 -h                      Display help.
 -c                      Enable color output
@@ -88,10 +93,5 @@ See also
 ========
 
 * videogame-launcher
-* duckstation-nogui
-* fceux
-* gearboy -h
-* mame
-* pcsx2
 
 .. include:: variables.rst

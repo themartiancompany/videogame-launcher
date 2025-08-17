@@ -86,6 +86,7 @@ Copyright Pellegrino Prevete. AGPL-3.0.
 See also
 ========
 
+* videogame-launcher-create
 * duckstation-nogui
 * fceux
 * gearboy -h
