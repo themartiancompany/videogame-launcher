@@ -183,7 +183,7 @@ _videogame_launcher_create() {
 # Shows configuration options.
 _show_config() {
   _msg_info "${app_name} configuration"
-  _msg_info "              Launch date:   ${launch_date}"
+  _msg_info "            Creation date:   ${creation_date}"
   _msg_info "               Game title:   ${game_title}"
   _msg_info "                   App ID:   ${app_id}"
   _msg_info "            Game launcher:   ${game_launcher}"
@@ -404,6 +404,19 @@ _game_platform_auto_detect() {
     "${_platform}"
 }
 
+_template_file_auto_detect() {
+  local \
+    _share \
+    _template_file
+  _share="$( \
+    _get_share)/videogame-launcher"
+  _template_file="${_share}/launchers/${_platform}-template.desktop"
+  _set_overrides \
+    "template" \
+    "file" \
+    "${_template_file}"
+}
+
 _set_overrides() {
   local \
     _app_id
@@ -425,6 +438,7 @@ _set_overrides() {
   _game_launcher_auto_detect
   _game_platform_auto_detect
   _game_lang_auto_detect
+  _template_file_auto_detect
 }
 
 _globals
