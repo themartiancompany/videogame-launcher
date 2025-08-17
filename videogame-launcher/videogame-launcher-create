@@ -24,10 +24,15 @@ _bin="$( \
     "$( \
       command \
         -v \
-	  "env")")"
-_lib="${_bin}/../lib"
-source \
-  "${_lib}/libcrash-bash/crash-bash"
+        "env")")"
+_lib="$( \
+  realpath \
+    "${_bin}/../lib")"
+_crash_bash="${_lib}/libcrash-bash/crash-bash"
+_sourced \
+  "${_crash_bash}" 2>/dev/null || \
+  source \
+    "${_crash_bash}"
 
 _usr_get() {
   local \
@@ -149,8 +154,37 @@ _command_create() {
     _game_platform="${6}" \
     _game_lang="${7}" \
     _command_file="${8}" \
-    _command_template
-  _command_template=""
+    _command_template \
+    _msg=()
+  _command_template="$( \
+    _get_usr)/share/videogame-launcher/configs/launchers/launcher"
+  _msg=(
+    "Preparing command-line launcher."
+  )
+  _msg_info \
+    "${_msg[*]}"
+  cp \
+    "${_command_template}" \
+    "${_command_file}"
+  sed \
+    -i \
+    "s/%_app_id%/${_app_id}/g" \
+    "${_command_file}"
+  sed \
+    -i \
+    "s/%_game_launcher%/${_game_launcher}/g" \
+    "${_command_file}"
+  sed \
+    -i \
+    "s/%_game_language%/${_game_lang}/g" \
+    "${_command_file}"
+  sed \
+    -i \
+    "s/%_game_platform%/${_game_platform}/g" \
+    "${_command_file}"
+  chmod \
+    +x \
+    "${_command_file}"
 }
 
 _videogame_launcher_create() {
