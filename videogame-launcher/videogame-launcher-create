@@ -59,6 +59,7 @@ _global_variables() {
   template_file=""
   desktop_file=""
   command_file=""
+  game_settings=""
   fullscreen_enabled=""
   color=""
   quiet=""
@@ -144,6 +145,43 @@ _desktop_file_create() {
     "${_output_file}"
 }
 
+_settings_duckstation_create() {
+  local \
+    _game_dir \
+    _os \
+    _rom_dir \
+    _rom_install_dir \
+    _settings_template \
+    _share \
+    _usr
+  _os="$( \
+    uname \
+      -o)"
+  _usr="$( \
+    _usr_get)"
+  _share="${_usr}/share"
+  _settings_template="${_share}/videogame-launchers/configs/duckstation/settings.ini"
+  _game_dir="${_usr}/games/${_app_id}"
+  if [[ "${_os}" == "GNU/Linux" ]]; then
+    _rom_dir="${_game_dir}"
+  elif [[ "${_os}" == "Android" ]]; then
+    _rom_dir="/storage/emulated/0/Android/media/${_app_id}"
+  fi
+  _msg_info \
+    "Preparing Duckstation config file."
+  cp \
+    "${_settings_template}" \
+    "${_game_settings}"
+  sed \
+    -i \
+    "s|%_share%|${_share}|g" \
+    "${_game_settings}"
+  sed \
+    -i \
+    "s|%_game_dir%|${_rom_dir}|g" \
+    "${_game_settings}"
+}
+
 _command_create() {
   local \
     _game_title="${1}" \
@@ -199,7 +237,9 @@ _videogame_launcher_create() {
     _game_lang="${8}" \
     _template_file="${9}" \
     _desktop_file="${10}" \
-    _command_file="${11}"
+    _game_settings="${11}" \
+    _command_file="${12}" \
+    _fullscreen_enabled="${13}"
   _desktop_file_create \
     "${_game_title}" \
     "${_app_id}" \
@@ -220,6 +260,9 @@ _videogame_launcher_create() {
     "${_game_platform}" \
     "${_game_lang}" \
     "${_command_file}"
+  if [[ "${_game_launcher}" == "duckstation" ]]; then
+    _settings_duckstation_create
+  fi
 }
 
 # Shows configuration options.
@@ -281,6 +324,9 @@ Usage:
      -m <template_file>     Template file to use to write
                             the launcher.
                             Default: ${template_file}
+     -s <settings_file>     Output launcher settings
+                            file.
+                            Default: ${settings_file}
      -o <command_file>      Output command filename.
                             Default: ${command_file}
      -f                     Whether to make the launcher offer
@@ -456,7 +502,10 @@ _template_file_auto_detect() {
 
 _set_overrides() {
   local \
-    _app_id
+    _app_id \
+    _pwd
+  _pwd="$( \
+    pwd)"
   _app_id="${app_id}"
   if [[ -v override_quiet ]]; then
     quiet="${override_quiet}"
@@ -479,11 +528,15 @@ _set_overrides() {
   _set_override \
     "desktop" \
     "file" \
-    "$(pwd)/${app_id}.desktop"
+    "${_pwd}/${app_id}.desktop"
   _set_override \
     "command" \
     "file" \
-    "$(pwd)/${_app_id}"
+    "${_pwd}/${_app_id}"
+  _set_override \
+    "game" \
+    "settings" \
+    "${_pwd}/${_app_id}.settings.ini"
   _set_override \
     "fullscreen" \
     "enabled" \
@@ -579,6 +632,7 @@ app_opts=(
   "${game_lang}"
   "${template_file}"
   "${desktop_file}"
+  "${game_settings}"
   "${command_file}"
   "${fullscreen_enabled}"
 )
