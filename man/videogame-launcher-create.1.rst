@@ -58,19 +58,27 @@ Options
                         'fceux', 'gearboy', 'flycast',
                         'love', 'mame', 'retroarch',
                         'pcsx2', 'scummvm'.
+
 -p game_platform        Game platform. It can be
                         'playstation', 'arcade',
-  	                     'doom', 'dreamcast', 'love',
+  	                'doom', 'dreamcast', 'love',
                         'mame20'nes', 'nintendo64',
                         'gameboy', 'playstation2'
                         or 'scummvm'.
+
 -l game_lang            Game languages.
+
 -t game_title           Game full title.
+
 -U game_uuid            The game platform UUID.
+
 -d description          Game launcher description.
+
 -m template_file        Template file to use to write
                         the launcher.
+
 -o command_file         Output command filename.
+
 -f                      Whether to make the launcher offer
                         to open the game in full-screen.
 
