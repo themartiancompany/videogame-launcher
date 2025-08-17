@@ -41,13 +41,9 @@ videogame-launcher-create *[options]* *app_id*
 Description
 ===========
 
-Seamlessly creates launcher for
-videogames.
-
-It works cross-platform on GNU/Linux,
-Android and Windows, so it is a dependency
-of almost all the videogames published on the
-Ur application store.
+Seamlessly creates launchers (desktop files and
+executable programs) for videogames running
+through Videogame Launcher.
 
 
 Options
