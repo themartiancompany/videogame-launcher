@@ -165,8 +165,8 @@ _videogame_launcher_create() {
     "${_app_id}" \
     "${_game_command}" \
     "${_game_uuid}" \
-    "${_emulator}" \
-    "${_platform}" \
+    "${_game_emulator}" \
+    "${_game_platform}" \
     "${_game_lang}" \
     "${_desktop_file}"
   _command_create \
@@ -174,8 +174,8 @@ _videogame_launcher_create() {
     "${_app_id}" \
     "${_game_command}" \
     "${_game_uuid}" \
-    "${_emulator}" \
-    "${_platform}" \
+    "${_game_emulator}" \
+    "${_game_platform}" \
     "${_game_lang}" \
     "${_command_file}"
 }
@@ -231,11 +231,11 @@ Usage:
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
      -t <game_title>        Game full title.
-                            Default: ${game_hud}
+                            Default: ${game_title}
      -U <game_uuid>         The game platform UUID.
                             Default: ${game_uuid}
      -d <description>       Game launcher description.
-                            Default: ${game_description}
+                            Default: ${game_pkgdesc}
      -m <template_file>     Template file to use to write
                             the launcher.
                             Default: ${template_file}
@@ -267,31 +267,6 @@ _game_lang_auto_detect() {
     "game" \
     "lang" \
     "${_lang}"
-}
-
-_game_settings_auto_detect() {
-  local \
-    _launcher \
-    _settings \
-    _pcsx2
-  _launcher="${game_launcher}"
-  _settings=""
-  if [[ "${_launcher}" == "duckstation" ]]; then
-    _settings="$( \
-      _usr_get)/games/${app_id}/${app_id}.settings.ini"
-  elif [[ "${_launcher}" == "pcsx2" ]]; then
-    _pcsx2="$( \
-      _pcsx2_auto_detect)"
-    _settings="${HOME}/.config/${app_id}/${_pcsx2}"
-  fi
-  _set_override \
-    "game" \
-    "settings" \
-    "${_settings}"
-  _set_override \
-    "fullscreen" \
-    "enabled" \
-    "n"
 }
 
 _game_launcher_auto_detect() {
@@ -429,23 +404,6 @@ _game_platform_auto_detect() {
     "${_platform}"
 }
 
-_game_hud_auto_detect() {
-  local \
-    _os \
-    _game_hud
-  _os="$( \
-    uname \
-      -o)"
-  _game_hud="n"
-  if [[ "${_os}" == "Android" ]]; then
-    _game_hud="y"
-  fi
-  _set_override \
-    "game" \
-    "hud" \
-    "${_game_hud}"
-}
-
 _set_overrides() {
   local \
     _app_id
@@ -467,8 +425,6 @@ _set_overrides() {
   _game_launcher_auto_detect
   _game_platform_auto_detect
   _game_lang_auto_detect
-  _game_hud_auto_detect
-  _game_settings_auto_detect
 }
 
 _globals
