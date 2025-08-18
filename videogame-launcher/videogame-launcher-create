@@ -431,33 +431,12 @@ _retroarch_platform_auto_detect() {
   if [[ -v "override_game_lang" ]]; then
     _game_lang="${override_game_lang}"
   fi
-  _msg_info \
+  _msg=(
     "Retroarch platform auto-detect."
+  )
   _msg_info \
-    "Game path: ${_game_path}."
-  if [[ "${_game_path}" == *".nes" ]]; then
-    _platform="nes"
-  elif [[ "${_game_path}" == *".gbc" || \
-	  "${_game_path}" == *".gb" ]]; then
-    _platform="gameboy"
-  elif [[ "${_game_path}" == *".bin" || \
-	  "${_game_path}" == *".cue" ]]; then
-    _platform="playstation"
-  elif [[ "${_game_path}" == *".iso" ]]; then
-    _platform="playstation2"
-  elif [[ "${_game_path}" == *".wad" || \
-	  "${_game_path}" == *".WAD" ]]; then
-    _platform="doom"
-  elif [[ -d "${_game_path}" ]]; then
-    _platform="scummvm"
-  elif [[ "${_game_path}" == "" ]]; then
-    _game_dir="$( \
-      _game_dir_get \
-        "${app_id}")"
-    if [[ "$(ls "${_game_dir}/"*".cdi")" != "" ]]; then
-      ""
-    fi
-  fi
+    "${_msg[*]}"
+  _platform=""
 }
 
 _game_platform_auto_detect() {
