@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=%_title%
-Comment=%pkgdesc%
+Name=%_game_title%
+Comment=%_game_pkgdesc%
 Type=Application
 TryExec=gearboy
 Exec=%_game_command%

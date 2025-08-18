@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=%_title% (%_uuid%)
-Comment=%_pkgdesc%
+Name=%_game_title% (%_game_uuid%)
+Comment=%_game_pkgdesc%
 Type=Application
 TryExec=duckstation-qt
 Exec=%_game_command%
