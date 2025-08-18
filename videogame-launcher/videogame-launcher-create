@@ -554,10 +554,6 @@ _set_overrides() {
     "game" \
     "pkgdesc" \
     "Videogame for ${game_platform}."
-  _set_override \
-    "output" \
-    "file" \
-    "$(pwd)/${_app_id}.desktop"
 }
 
 _globals
