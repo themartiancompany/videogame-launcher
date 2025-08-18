@@ -584,7 +584,7 @@ while \
     m) \
       override_template_file="${OPTARG}" ;;
     o) \
-      override_desktop_file="${OPTARG}" ;;
+      override_command_file="${OPTARG}" ;;
     c) \
       override_color="y" ;;
     v) \
