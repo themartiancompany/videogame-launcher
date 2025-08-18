@@ -160,7 +160,7 @@ _settings_duckstation_create() {
   _usr="$( \
     _usr_get)"
   _share="${_usr}/share"
-  _settings_template="${_share}/videogame-launchers/configs/duckstation/settings.ini"
+  _settings_template="${_share}/videogame-launcher/configs/duckstation/settings.ini"
   _game_dir="${_usr}/games/${_app_id}"
   if [[ "${_os}" == "GNU/Linux" ]]; then
     _rom_dir="${_game_dir}"
