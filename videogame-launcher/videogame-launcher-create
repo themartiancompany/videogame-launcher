@@ -111,7 +111,7 @@ _desktop_file_create() {
     "${_msg[*]}"
   cp \
     "${_template_file}" \
-    "${output_file}"
+    "${_output_file}"
   sed \
     -i \
     "s/%_game_title%/${_game_title}/g" \
@@ -279,6 +279,7 @@ _show_config() {
   _msg_info "            Template file:   ${template_file}"
   _msg_info "             Desktop file:   ${desktop_file}"
   _msg_info "             Command file:   ${command_file}"
+  _msg_info "            Settings file:   ${game_settings}"
   _msg_info "       Fullscreen enabled:   ${fullscreen_enabled}"
 }
 
@@ -324,9 +325,9 @@ Usage:
      -m <template_file>     Template file to use to write
                             the launcher.
                             Default: ${template_file}
-     -s <settings_file>     Output launcher settings
+     -s <settings_file>     Output launcher's settings
                             file.
-                            Default: ${settings_file}
+                            Default: ${game_settings}
      -o <command_file>      Output command filename.
                             Default: ${command_file}
      -f                     Whether to make the launcher offer

@@ -72,6 +72,8 @@ Options
 
 -m template_file        Template file to use to write
                         the launcher.
+-s settings_file        Output launcher's settings
+                        file.
 
 -o command_file         Output command filename.
 
