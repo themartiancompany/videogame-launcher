@@ -228,17 +228,16 @@ _videogame_launcher_create() {
   local \
     _game_title="${1}" \
     _app_id="${2}" \
-    _game_command="${3}" \
-    _game_pkgdesc="${4}" \
-    _game_uuid="${5}" \
-    _game_launcher="${6}" \
-    _game_platform="${7}" \
-    _game_lang="${8}" \
-    _template_file="${9}" \
-    _desktop_file="${10}" \
-    _game_settings="${11}" \
-    _command_file="${12}" \
-    _fullscreen_enabled="${13}" \
+    _game_pkgdesc="${3}" \
+    _game_uuid="${4}" \
+    _game_launcher="${5}" \
+    _game_platform="${6}" \
+    _game_lang="${7}" \
+    _template_file="${8}" \
+    _desktop_file="${9}" \
+    _game_settings="${10}" \
+    _command_file="${11}" \
+    _fullscreen_enabled="${12}" \
     _game_command
   _game_command="$( \
     basename \
