@@ -2,12 +2,12 @@
 Name=%_title%
 Comment=%pkgdesc%
 Type=Application
-TryExec=PCSX2
+TryExec=flycast
 Exec=%_pkgbase%
 Icon=%_app_id%-%_uuid%
 Terminal=false
 Categories=Game;
-Keywords=PS2
+Keywords=Dreamcast
 Actions=preferences;fullscreen;
 
 [Desktop Action fullscreen]
@@ -16,6 +16,6 @@ Exec=%_pkgbase% -f
 
 [Desktop Action preferences]
 Name=Preferences
-Exec=PCSX2
+Exec=flycast
 
 X-Desktop-File-Install-Version=0.26
