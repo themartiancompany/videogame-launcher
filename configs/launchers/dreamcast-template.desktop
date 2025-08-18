@@ -3,8 +3,8 @@ Name=%_title%
 Comment=%pkgdesc%
 Type=Application
 TryExec=flycast
-Exec=%_pkgbase%
-Icon=%_app_id%-%_uuid%
+Exec=%_game_command%
+Icon=%_app_id%-%_game_uuid%
 Terminal=false
 Categories=Game;
 Keywords=Dreamcast
@@ -12,7 +12,7 @@ Actions=preferences;fullscreen;
 
 [Desktop Action fullscreen]
 Name=Launch in fullscreen
-Exec=%_pkgbase% -f
+Exec=%_game_command% -f
 
 [Desktop Action preferences]
 Name=Preferences

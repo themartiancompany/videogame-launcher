@@ -3,8 +3,8 @@ Name=%_title%
 Comment=%pkgdesc%
 Type=Application
 TryExec=mame
-Exec=%_pkgbase%
-Icon=%_app_id%-%_uuid%
+Exec=%_game_command%
+Icon=%_app_id%-%_game_uuid%
 Terminal=false
 Categories=Game;
 Keywords=MAME
@@ -12,7 +12,7 @@ Actions=preferences;fullscreen;
 
 [Desktop Action fullscreen]
 Name=Launch in fullscreen
-Exec=videogame-launcher -f -e "%_game_launcher%" -l "%_game_language%" -p "%_game_platform%" "%_app_id%"
+Exec=%_game_command% -f
 
 [Desktop Action preferences]
 Name=Preferences
