@@ -50,7 +50,6 @@ _global_variables() {
   creation_date=""
   app_id=""
   game_title=""
-  game_command=""
   game_pkgdesc=""
   game_uuid=""
   game_launcher=""
@@ -239,7 +238,11 @@ _videogame_launcher_create() {
     _desktop_file="${10}" \
     _game_settings="${11}" \
     _command_file="${12}" \
-    _fullscreen_enabled="${13}"
+    _fullscreen_enabled="${13}" \
+    _game_command
+  _game_command="$( \
+    basename \
+      "${_command_file}")"
   _desktop_file_create \
     "${_game_title}" \
     "${_app_id}" \
@@ -621,7 +624,6 @@ _show_config
 app_opts=(
   "${game_title}"
   "${app_id}"
-  "${game_command}"
   "${game_pkgdesc}"
   "${game_uuid}"
   "${game_launcher}"
