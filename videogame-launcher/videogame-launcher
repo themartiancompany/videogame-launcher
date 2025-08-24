@@ -638,6 +638,12 @@ _game_launcher_opts_get() {
       "${_settings}"
       "${_fullscreen}"
     )
+  elif [[ "${_game_launcher}" == "flycast" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      "${_fullscreen}"
+    )
   elif [[ "${_game_launcher}" == "pcsx2" ]]; then
     _launch_opts+=(
       "${_app_id}"
