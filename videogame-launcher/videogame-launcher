@@ -76,6 +76,11 @@ _duckstation_requirements() {
     'duckstation'
 }
 
+_flycast_requirements() {
+  _check_cmd \
+    'flycast'
+}
+
 _love_requirements() {
   local \
     _msg=() \
@@ -311,6 +316,27 @@ _duckstation_launch() {
     "${_game_path}"
 }
 
+_flycast_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _flycast_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _flycast_opts+=(
+      --fullscreen
+    )
+  fi
+  flycast \
+    "${_flycast_opts[@]}" \
+    "${_game_path}"
+}
+
+
 _pcsx2_launch() {
   local \
     _app_id="${1}" \
@@ -428,6 +454,8 @@ _retroarch_launch() {
       _core_name="mame2000"
     elif [[ "${_platform}" == "doom" ]]; then
       _core_name="prboom"
+    elif [[ "${_platform}" == "dreamcast" ]]; then
+      _core_name="flycast"
     elif [[ "${_platform}" == "mame" ]]; then
       _core_name="${_platform}"
     elif [[ "${_platform}" == "mame2010" ]]; then
@@ -704,16 +732,17 @@ Usage:
 
   options:
      -e <game_launcher>     It can be 'doomretro',
-                            'duckstation',
-                            'fceux', 'gearboy', 'love',
+                            'duckstation', 'fceux',
+                            'flycast', 'gearboy', 'love',
 			    'mame', 'retroarch', 'pcsx2',
 			    'scummvm'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
-			    'doom', 'love', 'mame2010',
-			    'nes', 'nintendo64', 'gameboy',
-			    'playstation2', or 'scummvm'.
+			    'doom', 'dreamcast, 'love',
+                            'mame2010', 'nes', 'nintendo64',
+                            'gameboy', 'playstation2',
+                            or 'scummvm'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
@@ -802,6 +831,8 @@ _game_launcher_auto_detect() {
       _launcher="mame"
     elif [[ "${_game_platform}" == "doom" ]]; then
       _launcher="doomretro"
+    elif [[ "${_game_platform}" == "dreamcast" ]]; then
+      _launcher="flycast"
     elif [[ "${_game_platform}" == "gameboy" ]]; then
       _launcher="gearboy"
     elif [[ "${_game_platform}" == "playstation2" ]]; then
@@ -857,15 +888,17 @@ _retroarch_platform_auto_detect() {
   if [[ "${_game_path}" == *".nes" ]]; then
     _platform="nes"
   elif [[ "${_game_path}" == *".gbc" || \
-	  "${_game_path}" == *".gb" ]]; then
+          "${_game_path}" == *".gb" ]]; then
     _platform="gameboy"
+  elif [[ "${_game_path}" == *".cdi" ]]; then
+    _platform="dreamcast"
   elif [[ "${_game_path}" == *".bin" || \
-	  "${_game_path}" == *".cue" ]]; then
+          "${_game_path}" == *".cue" ]]; then
     _platform="playstation"
   elif [[ "${_game_path}" == *".iso" ]]; then
     _platform="playstation2"
   elif [[ "${_game_path}" == *".wad" || \
-	  "${_game_path}" == *".WAD" ]]; then
+          "${_game_path}" == *".WAD" ]]; then
     _platform="doom"
   elif [[ -d "${_game_path}" ]]; then
     _platform="scummvm"
