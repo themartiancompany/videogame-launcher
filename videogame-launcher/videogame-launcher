@@ -70,6 +70,11 @@ _doomretro_requirements() {
     'doomretro'
 }
 
+_dosbox_requirements() {
+  _check_cmd \
+    'dosbox'
+}
+
 _duckstation_requirements() {
   _check_cmd \
     'duckstation-nogui' \
@@ -279,6 +284,26 @@ _doomretro_launch() {
   fi
   doomretro \
     "${_doomretro_opts[@]}" \
+    "${_game_path}"
+}
+
+_doomretro_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _dosbox_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _dosbox_opts+=(
+      --fullscreen
+    )
+  fi
+  dosbox \
+    "${_dosbox_opts[@]}" \
     "${_game_path}"
 }
 
@@ -738,14 +763,15 @@ Usage:
 
   options:
      -e <game_launcher>     It can be 'doomretro',
-                            'duckstation', 'fceux',
-                            'flycast', 'gearboy', 'love',
+                            'dosbox', 'duckstation',
+                            'fceux', 'flycast',
+                            'gearboy', 'love',
 			    'mame', 'retroarch', 'pcsx2',
 			    'scummvm'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
-			    'doom', 'dreamcast, 'love',
+                            'doom', 'dos', 'dreamcast, 'love',
                             'mame2010', 'nes', 'nintendo64',
                             'gameboy', 'playstation2',
                             or 'scummvm'.
@@ -891,7 +917,9 @@ _retroarch_platform_auto_detect() {
       "${_game_lang}"
   _msg_info \
     "Game path: ${_game_path}."
-  if [[ "${_game_path}" == *".nes" ]]; then
+  if [[ "${_game_path}" == *".EXE" ]]; then
+    _platform="dos"
+  elif [[ "${_game_path}" == *".nes" ]]; then
     _platform="nes"
   elif [[ "${_game_path}" == *".gbc" || \
           "${_game_path}" == *".gb" ]]; then
@@ -924,6 +952,8 @@ _game_platform_auto_detect() {
   _platform=""
   if [[ "${game_launcher}" == "doomretro" ]]; then
     _platform="doom"
+  elif [[ "${game_launcher}" == "dosbox" ]]; then
+    _platform="dos"
   elif [[ "${game_launcher}" == "duckstation" ]]; then
     _platform="playstation"
   elif [[ "${game_launcher}" == "fceux" ]]; then
