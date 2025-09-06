@@ -216,6 +216,11 @@ _scummvm_requirements() {
     'scummvm'
 }
 
+_snes9x_requirements() {
+  _check_cmd \
+    'snes9x'
+}
+
 _game_dir_get() {
   local \
     _app_id="${1}" \
@@ -479,6 +484,8 @@ _retroarch_launch() {
       _core_name="mame2000"
     elif [[ "${_platform}" == "doom" ]]; then
       _core_name="prboom"
+    elif [[ "${_platform}" == "dos" ]]; then
+      _core_name="dosbox_pure"
     elif [[ "${_platform}" == "dreamcast" ]]; then
       _core_name="flycast"
     elif [[ "${_platform}" == "mame" ]]; then
@@ -497,6 +504,8 @@ _retroarch_launch() {
       _core_name="gearboy"
     elif [[ "${_platform}" == "scummvm" ]]; then
       _core_name="${_platform}"
+    elif [[ "${_platform}" == "snes" ]]; then
+      _core_name="snes9x"
     else
       _msg=(
         "Unknown platform '${_platform}'."
@@ -623,7 +632,6 @@ _love_launch() {
     "${_game_path}"
 }
 
-
 _scummvm_launch() {
   local \
     _app_id="${1}" \
@@ -646,6 +654,26 @@ _scummvm_launch() {
   scummvm \
     "${_scummvm_opts[@]}" \
     "${_settings}"
+}
+
+_snes9x_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _snes9x_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _doomretro_opts+=(
+      --fullscreen
+    )
+  fi
+  snes9x \
+    "${_snes9x_opts[@]}" \
+    "${_game_path}"
 }
 
 _game_launcher_opts_get() {
@@ -708,6 +736,13 @@ _game_launcher_opts_get() {
       "${_settings}"
       "${_fullscreen}"
     )
+  elif [[ "${_game_launcher}" == "snes9x" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      # "${_settings}"
+      "${_fullscreen}"
+    )
   else
     _msg_error \
       "Unknown launcher '${_game_launcher}'." \
@@ -767,14 +802,14 @@ Usage:
                             'fceux', 'flycast',
                             'gearboy', 'love',
 			    'mame', 'retroarch', 'pcsx2',
-			    'scummvm'.
+			    'scummvm', 'snes9x'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
                             'doom', 'dos', 'dreamcast, 'love',
                             'mame2010', 'nes', 'nintendo64',
                             'gameboy', 'playstation2',
-                            or 'scummvm'.
+                            'scummvm', 'snes'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
@@ -921,6 +956,8 @@ _retroarch_platform_auto_detect() {
     _platform="dos"
   elif [[ "${_game_path}" == *".nes" ]]; then
     _platform="nes"
+  elif [[ "${_game_path}" == *".smc" ]]; then
+    _platform="snes"
   elif [[ "${_game_path}" == *".gbc" || \
           "${_game_path}" == *".gb" ]]; then
     _platform="gameboy"
@@ -971,6 +1008,8 @@ _game_platform_auto_detect() {
     _platform="playstation2"
   elif [[ "${game_launcher}" == "scummvm" ]]; then
     _platform="scummvm"	
+  elif [[ "${game_launcher}" == "snes9x" ]]; then
+    _platform="snes"
   fi
   _set_override \
     "game" \
