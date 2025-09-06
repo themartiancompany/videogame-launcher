@@ -489,7 +489,7 @@ _retroarch_launch() {
     elif [[ "${_platform}" == "dreamcast" ]]; then
       _core_name="flycast"
     elif [[ "${_platform}" == "famicom" ]]; then
-      _core_name="quick${_platform}"
+      _core_name="fceumm"
     elif [[ "${_platform}" == "mame" ]]; then
       _core_name="${_platform}"
     elif [[ "${_platform}" == "mame2010" ]]; then
