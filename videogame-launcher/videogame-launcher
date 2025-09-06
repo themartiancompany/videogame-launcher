@@ -584,10 +584,8 @@ _fceux_launch() {
     _fceux_home \
     _fceux_sys_bios \
     _fceux_opts=() \
-    _usr \
+    _share \
     _msg=()
-  _usr="$( \
-    _get_usr)"
   _fceux_home="${HOME}/.fceux"
   _fceux_bios="${_fceux_home}/dysksys.rom"
   _game_path_get \
@@ -600,9 +598,9 @@ _fceux_launch() {
   fi
   if [[ "${_game_platform}" == "famicom" ]]; then
     if [[ ! -e "${_fceux_bios}" ]]; then
-      _usr="$( \
-        _get_usr)"
-      _fceux_sys_bios="${_usr}/famicom/bios/DISKSYS.ROM"
+      _share="$( \
+        _get_usr)/share"
+      _fceux_sys_bios="${_share}/famicom/bios/DISKSYS.ROM"
       if [[ ! -e "${_fceux_sys_bios}" ]]; then
         _msg=(
 	  "FamiCom BIOS must be installed"
