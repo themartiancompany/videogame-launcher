@@ -587,7 +587,7 @@ _fceux_launch() {
     _share \
     _msg=()
   _fceux_home="${HOME}/.fceux"
-  _fceux_bios="${_fceux_home}/dysksys.rom"
+  _fceux_bios="${_fceux_home}/disksys.rom"
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
