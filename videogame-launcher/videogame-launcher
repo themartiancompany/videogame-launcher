@@ -488,6 +488,8 @@ _retroarch_launch() {
       _core_name="dosbox_pure"
     elif [[ "${_platform}" == "dreamcast" ]]; then
       _core_name="flycast"
+    elif [[ "${_platform}" == "famicom" ]]; then
+      _core_name="quick${_platform}"
     elif [[ "${_platform}" == "mame" ]]; then
       _core_name="${_platform}"
     elif [[ "${_platform}" == "mame2010" ]]; then
@@ -578,7 +580,16 @@ _fceux_launch() {
     _lang="${2}" \
     _fullscreen="${3}" \
     _game_path \
-    _fceux_opts=()
+    _fceux_bios \
+    _fceux_home \
+    _fceux_sys_bios \
+    _fceux_opts=() \
+    _usr \
+    _msg=()
+  _usr="$( \
+    _get_usr)"
+  _fceux_home="${HOME}/.fceux"
+  _fceux_bios="${_fceux_home}/dysksys.rom"
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
@@ -586,6 +597,35 @@ _fceux_launch() {
     _fceux_opts+=(
       --fullscreen
     )
+  fi
+  if [[ "${_game_platform}" == "famicom" ]]; then
+    if [[ ! -e "${_fceux_bios}" ]]; then
+      _usr="$( \
+        _get_usr)"
+      _fceux_sys_bios="${_usr}/famicom/bios/DISKSYS.ROM"
+      if [[ ! -e "${_fceux_sys_bios}" ]]; then
+        _msg=(
+	  "FamiCom BIOS must be installed"
+	  "at location '${_fceux_sys_bios}'."
+	  "If you don't know where to get"
+	  "one you can type"
+	  "'ur famicom-bios'."
+	  "For more information check"
+	  "<https://github.com/themartiancompany/ur>."
+        )
+	_msg_error \
+          "${_msg[*]}" \
+	  1
+      fi
+      if [[ ! -d "${_fceux_home}" ]]; then
+        mkdir \
+          -p \
+          "${_fceux_home}"
+      fi
+      cp \
+        "${_fceux_sys_bios}" \
+        "${_fceux_bios}"
+    fi
   fi
   fceux \
     "${_fceux_opts[@]}" \
@@ -806,9 +846,9 @@ Usage:
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
-                            'doom', 'dos', 'dreamcast, 'love',
-                            'mame2010', 'nes', 'nintendo64',
-                            'gameboy', 'playstation2',
+                            'doom', 'dos', 'dreamcast, 'famicom',
+                            'love', 'mame2010', 'nes',
+                            'nintendo64', 'gameboy', 'playstation2',
                             'scummvm', 'snes'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
@@ -900,6 +940,8 @@ _game_launcher_auto_detect() {
       _launcher="doomretro"
     elif [[ "${_game_platform}" == "dreamcast" ]]; then
       _launcher="flycast"
+    elif [[ "${_game_platform}" == "famicom" ]]; then
+      _launcher="fceux"
     elif [[ "${_game_platform}" == "gameboy" ]]; then
       _launcher="gearboy"
     elif [[ "${_game_platform}" == "playstation2" ]]; then
@@ -956,6 +998,8 @@ _retroarch_platform_auto_detect() {
     _platform="dos"
   elif [[ "${_game_path}" == *".nes" ]]; then
     _platform="nes"
+  elif [[ "${_game_path}" == *".fds" ]]; then
+    _platform="famicom"
   elif [[ "${_game_path}" == *".smc" ]]; then
     _platform="snes"
   elif [[ "${_game_path}" == *".gbc" || \
