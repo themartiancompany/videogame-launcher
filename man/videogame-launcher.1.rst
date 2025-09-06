@@ -58,7 +58,7 @@ Options
                         'scummvm', 'snes9x'.
 -p game_platform        Game platform. It can be
                         'playstation', 'arcade',
-   		        'doom', 'love', 'mame2010',
+   		        'doom', 'famicom', 'love', 'mame2010',
                         'nes', 'nintendo64', 'gameboy',
                         'playstation2', 'scummvm',
                         'snes'.
