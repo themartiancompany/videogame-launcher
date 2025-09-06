@@ -52,15 +52,16 @@ Ur application store.
 Options
 ========
 
--e game_launcher        It can be 'doom', 'duckstation',
-                        'fceux', 'gearboy', 'love',
-                        'mame', 'retroarch', 'pcsx2',
-                        'scummvm'.
+-e game_launcher        It can be 'doom', 'dosbox'
+                        'duckstation', 'fceux', 'gearboy',
+                        'love', 'mame', 'retroarch', 'pcsx2',
+                        'scummvm', 'snes9x'.
 -p game_platform        Game platform. It can be
                         'playstation', 'arcade',
    		        'doom', 'love', 'mame2010',
                         'nes', 'nintendo64', 'gameboy',
-                        'playstation2', 'scummvm'.
+                        'playstation2', 'scummvm',
+                        'snes'.
 -l game_lang            Game languages.
 -H                      Enables on-screen
                         controller HUD.
