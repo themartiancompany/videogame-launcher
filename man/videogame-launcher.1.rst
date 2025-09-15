@@ -53,20 +53,29 @@ Options
 ========
 
 -e game_launcher        It can be 'doom', 'dosbox'
-                        'duckstation', 'fceux', 'gearboy',
-                        'love', 'mame', 'retroarch', 'pcsx2',
+                        'duckstation', 'fceux',
+                        'flycast', 'gearboy',
+                        'love', 'mame',
+                        'retroarch', 'pcsx2',
                         'scummvm', 'snes9x'.
+
 -p game_platform        Game platform. It can be
                         'playstation', 'arcade',
-   		        'doom', 'famicom', 'love', 'mame2010',
-                        'nes', 'nintendo64', 'gameboy',
-                        'playstation2', 'scummvm',
-                        'snes'.
+  	                'doom', 'dos', 'dreamcast',
+                        'famicom', 'gameboy',
+                        'love', 'mame2010', 'msx',
+                        'nes', 'nintendo64',
+                        'playstation2', 'scummvm'
+                        or 'snes'.
+
 -l game_lang            Game languages.
+
 -H                      Enables on-screen
                         controller HUD.
+
 -s game_settings        It can be a Duckstation settings file
                         or a SCUMMVM game name.
+
 -f                      Launch the game in full-screen.
 
 -h                      Display help.

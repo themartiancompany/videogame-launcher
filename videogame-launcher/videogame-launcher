@@ -839,14 +839,15 @@ Usage:
                             'dosbox', 'duckstation',
                             'fceux', 'flycast',
                             'gearboy', 'love',
-			    'mame', 'retroarch', 'pcsx2',
-			    'scummvm', 'snes9x'.
+                            'mame', 'retroarch', 'pcsx2',
+                            'scummvm', 'snes9x'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
-                            'doom', 'dos', 'dreamcast, 'famicom',
-                            'love', 'mame2010', 'nes',
-                            'nintendo64', 'gameboy', 'playstation2',
+                            'doom', 'dos', 'dreamcast,
+                            'famicom', 'gameboy', 'love',
+                            'mame2010', 'msx', 'nes',
+                            'nintendo64', 'playstation2',
                             'scummvm', 'snes'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
@@ -942,6 +943,8 @@ _game_launcher_auto_detect() {
       _launcher="fceux"
     elif [[ "${_game_platform}" == "gameboy" ]]; then
       _launcher="gearboy"
+    elif [[ "${_game_platform}" == "msx" ]]; then
+      _launcher="mame"
     elif [[ "${_game_platform}" == "playstation2" ]]; then
       _launcher="pcsx2"
     fi
@@ -1010,6 +1013,8 @@ _retroarch_platform_auto_detect() {
     _platform="playstation"
   elif [[ "${_game_path}" == *".iso" ]]; then
     _platform="playstation2"
+  elif [[ "${_game_path}" == *".mx2" ]]; then
+    _platform="msx"
   elif [[ "${_game_path}" == *".wad" || \
           "${_game_path}" == *".WAD" ]]; then
     _platform="doom"
@@ -1020,7 +1025,8 @@ _retroarch_platform_auto_detect() {
       _game_dir_get \
         "${app_id}")"
     if [[ "$(ls "${_game_dir}/"*".cdi")" != "" ]]; then
-      ""
+      echo \
+        "mm"
     fi
   fi
 }
@@ -1041,6 +1047,9 @@ _game_platform_auto_detect() {
     _platform="gameboy"
   elif [[ "${game_launcher}" == "mame" ]]; then
     _platform="arcade"
+    # Can also be 'msx'
+    # TODO:
+    # _mame_auto_detect
   elif [[ "${game_launcher}" == "love" ]]; then
     _platform="love"
   elif [[ "${game_launcher}" == "retroarch" ]]; then
