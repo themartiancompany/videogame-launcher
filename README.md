@@ -23,9 +23,11 @@
 
 Seamlessly launch videogames.
 
-Currently supports launching Arcade games,
-NES, Nintendo 64, SNES, GameBoy, Love,
-PlayStation, PlayStation 2 games.
+Currently supports launching Arcade,
+DreamCast, FamiCom, NES, GameBoy,
+Love, MSX, Nintendo 64,
+PlayStation, PlayStation 2,
+SCUMMVM, SNES games.
 
 It works cross-platform on GNU/Linux,
 Android and Windows, so it is a dependency
