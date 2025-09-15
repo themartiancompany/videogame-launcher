@@ -1,0 +1,21 @@
+[Desktop Entry]
+Name=%_game_title%
+Comment=%_game_pkgdesc%
+Type=Application
+TryExec=mame
+Exec=%_game_command%
+Icon=%_app_id%-%_game_uuid%
+Terminal=false
+Categories=Game;
+Keywords=MAME;MSX
+Actions=preferences;fullscreen;
+
+[Desktop Action fullscreen]
+Name=Launch in fullscreen
+Exec=%_game_command% -f
+
+[Desktop Action preferences]
+Name=Preferences
+Exec=mame
+
+X-Desktop-File-Install-Version=0.26
