@@ -81,6 +81,11 @@ _duckstation_requirements() {
     'duckstation'
 }
 
+_flashplayer_requirements() {
+  _check_cmd \
+    'flashplayer'
+}
+
 _flycast_requirements() {
   _check_cmd \
     'flycast'
@@ -211,6 +216,14 @@ _retroarch_requirements() {
   fi
 }
 
+
+_ruffle_requirements() {
+  if [[ "${_os}" == "GNU/Linux" ]]; then
+  _check_cmd \
+    'ruffle'
+  fi
+}
+
 _scummvm_requirements() {
   _check_cmd \
     'scummvm'
@@ -292,7 +305,7 @@ _doomretro_launch() {
     "${_game_path}"
 }
 
-_doomretro_launch() {
+_dosbox_launch() {
   local \
     _app_id="${1}" \
     _lang="${2}" \
@@ -346,6 +359,26 @@ _duckstation_launch() {
     "${_game_path}"
 }
 
+_flashplayer_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _flashplayer_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _flashplayer_opts+=(
+      --fullscreen
+    )
+  fi
+  flashplayer \
+    "${_flashplayer_opts[@]}" \
+    "${_game_path}"
+}
+
 _flycast_launch() {
   local \
     _app_id="${1}" \
@@ -365,7 +398,6 @@ _flycast_launch() {
     "${_flycast_opts[@]}" \
     "${_game_path}"
 }
-
 
 _pcsx2_launch() {
   local \
@@ -603,17 +635,17 @@ _fceux_launch() {
       _fceux_sys_bios="${_share}/famicom/bios/DISKSYS.ROM"
       if [[ ! -e "${_fceux_sys_bios}" ]]; then
         _msg=(
-	  "FamiCom BIOS must be installed"
-	  "at location '${_fceux_sys_bios}'."
-	  "If you don't know where to get"
-	  "one you can type"
-	  "'ur famicom-bios'."
-	  "For more information check"
-	  "<https://github.com/themartiancompany/ur>."
+          "FamiCom BIOS must be installed"
+          "at location '${_fceux_sys_bios}'."
+          "If you don't know where to get"
+          "one you can type"
+          "'ur famicom-bios'."
+          "For more information check"
+          "<https://github.com/themartiancompany/ur>."
         )
-	_msg_error \
+        _msg_error \
           "${_msg[*]}" \
-	  1
+          1
       fi
       if [[ ! -d "${_fceux_home}" ]]; then
         mkdir \
@@ -722,11 +754,25 @@ _game_launcher_opts_get() {
       # "${_settings}"
       "${_fullscreen}"
     )
+  elif [[ "${_game_launcher}" == "dosbox" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      # "${_settings}"
+      "${_fullscreen}"
+    )
   elif [[ "${_game_launcher}" == "duckstation" ]]; then
     _launch_opts+=(
       "${_app_id}"
       "${_lang}"
       "${_settings}"
+      "${_fullscreen}"
+    )
+  elif [[ "${_game_launcher}" == "flashplayer" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      # "${_settings}"
       "${_fullscreen}"
     )
   elif [[ "${_game_launcher}" == "flycast" ]]; then
@@ -837,16 +883,16 @@ Usage:
   options:
      -e <game_launcher>     It can be 'doomretro',
                             'dosbox', 'duckstation',
-                            'fceux', 'flycast',
-                            'gearboy', 'love',
+                            'fceux', 'flashplayer',
+                            'flycast', 'gearboy', 'love',
                             'mame', 'retroarch', 'pcsx2',
                             'scummvm', 'snes9x'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
                             'doom', 'dos', 'dreamcast,
-                            'famicom', 'gameboy', 'love',
-                            'mame2010', 'msx', 'nes',
+                            'famicom', 'flash', 'gameboy',
+                            'love', 'mame2010', 'msx', 'nes',
                             'nintendo64', 'playstation2',
                             'scummvm', 'snes'.
                             Default: ${game_platform}
@@ -941,6 +987,8 @@ _game_launcher_auto_detect() {
       _launcher="flycast"
     elif [[ "${_game_platform}" == "famicom" ]]; then
       _launcher="fceux"
+    elif [[ "${_game_platform}" == "flash" ]]; then
+      _launcher="flashplayer"
     elif [[ "${_game_platform}" == "gameboy" ]]; then
       _launcher="gearboy"
     elif [[ "${_game_platform}" == "msx" ]]; then
@@ -1003,6 +1051,8 @@ _retroarch_platform_auto_detect() {
     _platform="famicom"
   elif [[ "${_game_path}" == *".smc" ]]; then
     _platform="snes"
+  elif [[ "${_game_path}" == *".swf" ]]; then
+    _platform="flashplayer"
   elif [[ "${_game_path}" == *".gbc" || \
           "${_game_path}" == *".gb" ]]; then
     _platform="gameboy"
@@ -1043,6 +1093,8 @@ _game_platform_auto_detect() {
     _platform="playstation"
   elif [[ "${game_launcher}" == "fceux" ]]; then
     _platform="nes"
+  elif [[ "${game_launcher}" == "flashplayer" ]]; then
+    _platform="flash"
   elif [[ "${game_launcher}" == "gearboy" ]]; then
     _platform="gameboy"
   elif [[ "${game_launcher}" == "mame" ]]; then
