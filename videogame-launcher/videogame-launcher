@@ -222,6 +222,11 @@ _retroarch_requirements() {
 }
 
 _ruffle_requirements() {
+  local \
+    _os
+  _os="$( \
+    uname \
+      -o)"
   if [[ "${_os}" == "GNU/Linux" ]]; then
   _check_cmd \
     'ruffle'
