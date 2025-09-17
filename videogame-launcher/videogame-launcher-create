@@ -307,15 +307,16 @@ Usage:
                             'duckstation',
                             'fceux', 'flashplayer',
                             'gearboy', 'flycast',
-                            'love', 'mame', 'retroarch',
-                            'pcsx2', 'scummvm', 'snes9x'.
+                            'love', 'mame', 'openmsx',
+                            'retroarch', 'pcsx2',
+                            'scummvm', 'snes9x'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
                             'playstation', 'arcade',
        	                    'doom', 'dreamcast', 'flash',
-                            'love', 'mame2010', 'nes',
-                            'nintendo64', 'gameboy',
-                            'playstation2', 'scummvm'
+                            'gameboy', 'love', 'mame2010',
+                            'msx', 'nes', 'nintendo64',
+			    'playstation2', 'scummvm'
                             or 'snes'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
@@ -382,14 +383,21 @@ _game_launcher_auto_detect() {
     "${_msg[*]}"
   if [[ "${_os}" == "Android" ]]; then
     _launcher="retroarch"
+    if [[ "${_game_platform}" == "flash" ]]; then
+      _launcher="ruffle"
+    fi
   elif [[ "${_os}" == "GNU/Linux" ]]; then
     _launcher="duckstation"
     if [[ "${_game_platform}" == "arcade" ]]; then
       _launcher="mame"
     elif [[ "${_game_platform}" == "doom" ]]; then
       _launcher="doomretro"
+    elif [[ "${_game_platform}" == "flash" ]]; then
+      _launcher="flashplayer"
     elif [[ "${_game_platform}" == "gameboy" ]]; then
       _launcher="gearboy"
+    elif [[ "${_game_platform}" == "msx" ]]; then
+      _launcher="openmsx"
     elif [[ "${_game_platform}" == "playstation2" ]]; then
       _launcher="pcsx2"
     fi
