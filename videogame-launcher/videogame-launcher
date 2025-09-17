@@ -747,7 +747,11 @@ _ruffle_launch() {
     _lang="${2}" \
     _fullscreen="${3}" \
     _game_path \
-    _ruffle_opts=()
+    _ruffle_opts=() \
+    _os
+  _os="$( \
+    uname \
+      -o)"
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
