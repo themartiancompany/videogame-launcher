@@ -24,14 +24,18 @@
 Seamlessly launch videogames.
 
 Currently supports launching Arcade,
-DreamCast, FamiCom, NES, GameBoy,
-Love, MSX, Nintendo 64,
-PlayStation, PlayStation 2,
-SCUMMVM, SNES games.
+Sega DreamCast, Nintendo FamiCom Disk
+System, Nintendo Entertainment System,
+Nintendo GameBoy, Flash Player, Love
+MSX, Nintendo 64, Sony PlayStation,
+Sony PlayStation 2, SCUMMVM,
+Super Nintendo Entertainment System
+games.
 
 It works cross-platform on GNU/Linux,
-Android and Windows, so it is a dependency
-of almost all the videogames published on the
+Android and Windows by making use of many
+platform emulators, so it is a dependency
+for almost all the videogames published on the
 [Ur](
   https://github.com/themartiancompany/ur)
 uncensorable application store.
