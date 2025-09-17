@@ -56,8 +56,9 @@ Options
                         'duckstation', 'fceux',
                         'flashplayer', 'flycast',
                         'gearboy', 'love', 'mame',
-                        'retroarch', 'pcsx2',
-                        'scummvm', 'snes9x'.
+                        'openmsx', 'retroarch',
+                        'pcsx2', 'ruffle', 'scummvm',
+                        'snes9x'.
 
 -p game_platform        Game platform. It can be
                         'playstation', 'arcade',

@@ -736,6 +736,31 @@ _retroarch_launch() {
   fi
 }
 
+_ruffle_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _ruffle_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_os}" == "GNU/Linux" ]]; then
+    if [[ "${_fullscreen}" == "y" ]]; then
+      _ruffle_opts+=(
+        --fullscreen
+      )
+    fi
+    ruffle \
+      "${_ruffle_opts[@]}" \
+      "${_game_path}"
+  elif [[ "${_os}" == "Android" ]]; then
+    termux-open \
+      "${_game_path}"
+  fi
+}
+
 _scummvm_launch() {
   local \
     _app_id="${1}" \
@@ -852,6 +877,13 @@ _game_launcher_opts_get() {
       "${_game_platform}"
       "${_lang}"
       "${_hud}"
+    )
+  elif [[ "${_game_launcher}" == "ruffle" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      # "${_settings}"
+      "${_fullscreen}"
     )
   elif [[ "${_game_launcher}" == "scummvm" ]]; then
     _launch_opts+=(
@@ -1018,6 +1050,9 @@ _game_launcher_auto_detect() {
     "${_msg[*]}"
   if [[ "${_os}" == "Android" ]]; then
     _launcher="retroarch"
+    if [[ "${_game_platform}" == "flash" ]]; then
+      _launcher="ruffle"
+    fi
   elif [[ "${_os}" == "GNU/Linux" ]]; then
     _launcher="duckstation"
     if [[ "${_game_platform}" == "arcade" ]]; then
