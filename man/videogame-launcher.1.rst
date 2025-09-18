@@ -64,8 +64,8 @@ Options
                         'playstation', 'arcade',
   	                'doom', 'dos', 'dreamcast',
                         'famicom', 'flash', 'gameboy',
-                        'love', 'mame2010', 'msx',
-                        'nes', 'nintendo64',
+                        'love', 'mame', 'mame2010',
+                        'msx', 'nes', 'nintendo64',
                         'playstation2', 'scummvm'
                         or 'snes'.
 
