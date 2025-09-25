@@ -312,9 +312,9 @@ Usage:
                             'scummvm', 'snes9x'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
-                            'arcade', 'doom', 'dreamcast',
-                            'flash', 'gameboy', 'love',
-                            'mame', 'mame2010', 'msx',
+                            'apple2', 'arcade', 'doom',
+                            'dreamcast', 'flash', 'gameboy',
+                            'love', 'mame', 'mame2010', 'msx',
                             'nes', 'nintendo64',
                             'playstation', 'playstation2',
 			    'scummvm' or 'snes'.

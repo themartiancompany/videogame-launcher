@@ -679,10 +679,10 @@ _retroarch_launch() {
       _core_name="fceumm"
     elif [[ "${_platform}" == "mame" ]]; then
       _core_name="${_platform}arcade"
-    elif [[ "${_platform}" == "mame2010" ]]; then
-      _core_name="${_platform}"
     elif [[ "${_platform}" == "mame2003" ]]; then
       _core_name="${_platform}_plus"
+    elif [[ "${_platform}" == "mame2010" ]]; then
+      _core_name="${_platform}"
     elif [[ "${_platform}" == "msx" ]]; then
       _core_name="blue${_platform}"
     elif [[ "${_platform}" == "nes" ]]; then
@@ -971,12 +971,13 @@ Usage:
                             'snes9x'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
-                            'arcade', 'doom', 'dos', 'dreamcast,
-                            'famicom', 'flash', 'gameboy',
-                            'love', 'mame', 'mame2010, 'msx',
-                            'nes', 'nintendo64', 'playstation',
-                            'playstation2', 'scummvm',
-                            'snes'.
+                            'apple2', 'arcade', 'doom',
+                            'dos', 'dreamcast, 'famicom',
+                            'flash', 'gameboy', 'love',
+                            'mame', 'mame2003, 'mame2010,
+                            'msx', 'nes', 'nintendo64',
+                            'playstation', 'playstation2',
+                            'scummvm' or 'snes'.
                             Default: ${game_platform}
      -l <game_lang>         Game languages.
                             Default: ${game_lang}
@@ -1064,7 +1065,9 @@ _game_launcher_auto_detect() {
     fi
   elif [[ "${_os}" == "GNU/Linux" ]]; then
     _launcher="duckstation"
-    if [[ "${_game_platform}" == "arcade" ]]; then
+    if [[ "${_game_platform}" == "apple2" ]]; then
+      _launcher="mame"
+    elif [[ "${_game_platform}" == "arcade" ]]; then
       _launcher="mame"
     elif [[ "${_game_platform}" == "doom" ]]; then
       _launcher="doomretro"

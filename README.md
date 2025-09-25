@@ -23,8 +23,8 @@
 
 Seamlessly launch videogames.
 
-Currently supports launching Arcade,
-Sega DreamCast, Nintendo FamiCom Disk
+Currently supports launching Apple II,
+Arcade, Sega DreamCast, Nintendo FamiCom Disk
 System, Nintendo Entertainment System,
 Nintendo GameBoy, Flash Player, Love
 MSX, Nintendo 64, Sony PlayStation,

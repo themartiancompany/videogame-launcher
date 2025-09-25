@@ -61,13 +61,13 @@ Options
                         'snes9x'.
 
 -p game_platform        Game platform. It can be
-                        'playstation', 'arcade',
+                        'apple2', 'arcade',
   	                'doom', 'dos', 'dreamcast',
                         'famicom', 'flash', 'gameboy',
                         'love', 'mame', 'mame2010',
                         'msx', 'nes', 'nintendo64',
-                        'playstation2', 'scummvm'
-                        or 'snes'.
+                        'playstation', 'playstation2',
+                        'scummvm' or 'snes'.
 
 -l game_lang            Game languages.
 
