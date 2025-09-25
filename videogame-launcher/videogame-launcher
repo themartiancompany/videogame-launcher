@@ -517,7 +517,8 @@ _mame_launch() {
     _game_path \
     _mame_opts=() \
     _rom_dir \
-    _game_name
+    _game_name \
+    _msg=()
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
@@ -533,19 +534,25 @@ _mame_launch() {
   _game_name="$( \
     basename \
       "${_game_path}")"
-  mame_opts+=(
+  _mame_opts+=(
     -rompath
       "${_rom_dir}"
   )
   if [[ "${_game_platform}" == "apple2" ]]; then
-    mame_opts+=(
+    _mame_opts+=(
       -swpath
         "${_rom_dir}"
-      apple2e
+      apple2
       # -flop1
       #   "${_flop1}"
     )
   fi
+  _msg=(
+    "Running MAME with options"
+    "'${_mame_opts[*]}'."
+  )
+  _msg_info \
+    "${_msg[*]}"
   mame \
     "${_mame_opts[@]}" \
     "${_game_name}"
