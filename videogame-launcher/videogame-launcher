@@ -515,7 +515,9 @@ _mame_launch() {
     _lang="${2}" \
     _fullscreen="${3}" \
     _game_path \
-    _mame_opts=()
+    _mame_opts=() \
+    _rom_dir \
+    _game_name
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
@@ -523,15 +525,30 @@ _mame_launch() {
     _mame_opts+=(
       -window
       -nomaximize
-      -rompath
-        "$(dirname \
-             "${_game_path}")"
+    )
+  fi
+  _rom_dir="$( \
+    dirname \
+      "${_game_path}")"
+  _game_name="$( \
+    basename \
+      "${_game_path}")"
+  mame_opts+=(
+    -rompath
+      "${_rom_dir}"
+  )
+  if [[ "${_game_platform}" == "apple2" ]]; then
+    mame_opts+=(
+      -swpath
+        "${_rom_dir}"
+      apple2e
+      # -flop1
+      #   "${_flop1}"
     )
   fi
   mame \
     "${_mame_opts[@]}" \
-    "$(basename \
-         "${_game_path}")"
+    "${_game_name}"
 }
 
 _openmsx_launch() {
