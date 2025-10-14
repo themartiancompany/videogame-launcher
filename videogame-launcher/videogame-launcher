@@ -96,6 +96,11 @@ _flycast_requirements() {
     'flycast'
 }
 
+_fs_uae_requirements() {
+  _check_cmd \
+    "fs-uae"
+}
+
 _gearboy_requirements() {
   _check_cmd \
     'gearboy'
@@ -461,6 +466,26 @@ _flycast_launch() {
   fi
   flycast \
     "${_flycast_opts[@]}" \
+    "${_game_path}"
+}
+
+_fs_uae_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _game_path \
+    _fs_uae_opts=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  if [[ "${_fullscreen}" == "y" ]]; then
+    _fs_uae_opts+=(
+      --fullscreen
+    )
+  fi
+  fs_uae \
+    "${_fs_uae_opts[@]}" \
     "${_game_path}"
 }
 
@@ -879,6 +904,12 @@ _game_launcher_opts_get() {
       "${_lang}"
       "${_fullscreen}"
     )
+  elif [[ "${_game_launcher}" == "fs-uae" ]]; then
+    _launch_opts+=(
+      "${_app_id}"
+      "${_lang}"
+      "${_fullscreen}"
+    )
   elif [[ "${_game_launcher}" == "gearboy" ]]; then
     _launch_opts+=(
       "${_app_id}"
@@ -989,15 +1020,17 @@ Usage:
      -e <game_launcher>     It can be 'doomretro',
                             'dosbox', 'duckstation',
                             'fceux', 'flashplayer',
-                            'flycast', 'gearboy', 'love',
-                            'mame', 'openmsx', 'retroarch',
-                            'ruffle', 'pcsx2', 'scummvm',
+                            'flycast', 'fs-uae', 'gearboy',
+                            'love', 'mame', 'openmsx',
+                            'retroarch', 'ruffle',
+                            'pcsx2', 'scummvm',
                             'snes9x'.
                             Default: ${game_launcher}
      -p <game_platform>     Game platform. It can be
-                            'apple2', 'arcade', 'doom',
-                            'dos', 'dreamcast, 'famicom',
-                            'flash', 'gameboy', 'love',
+                            'amiga, 'apple2', 'arcade',
+                            'doom', 'dreamcast',
+                            'famicom', 'flash',
+                            'gameboy', 'love',
                             'mame', 'mame2003, 'mame2010,
                             'msx', 'nes', 'nintendo64',
                             'playstation', 'playstation2',
@@ -1089,7 +1122,9 @@ _game_launcher_auto_detect() {
     fi
   elif [[ "${_os}" == "GNU/Linux" ]]; then
     _launcher="duckstation"
-    if [[ "${_game_platform}" == "apple2" ]]; then
+    if [[ "${_game_platform}" == "amiga" ]]; then
+      _launcher="fs-uae"
+    elif [[ "${_game_platform}" == "apple2" ]]; then
       _launcher="mame"
     elif [[ "${_game_platform}" == "arcade" ]]; then
       _launcher="mame"
@@ -1207,6 +1242,8 @@ _game_platform_auto_detect() {
     _platform="nes"
   elif [[ "${game_launcher}" == "flashplayer" ]]; then
     _platform="flash"
+  elif [[ "${game_launcher}" == "fs-uae" ]]; then
+    _platform="amiga"
   elif [[ "${game_launcher}" == "gearboy" ]]; then
     _platform="gameboy"
   elif [[ "${game_launcher}" == "love" ]]; then

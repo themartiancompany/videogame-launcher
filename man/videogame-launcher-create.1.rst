@@ -51,14 +51,16 @@ Options
 
 -e game_launcher        It can be 'doomretro',
                         'dosbox', 'duckstation',
-                        'fceux', 'flashplayer', 'gearboy',
-                        'flycast', 'love', 'mame', 'openmsx',
+                        'fceux', 'flashplayer', 'fs-uae',
+                        'flycast', 'gearboy', 'love',
+                        'mame', 'openmsx',
                         'retroarch', 'pcsx2', 'ruffle',
                         'scummvm', 'snes9x'.
 
 -p game_platform        Game platform. It can be
-                        'apple2', 'arcade', 'doom', 'dos',
-                        'dreamcast', 'famicom', flash',
+                        'amiga', 'apple2', 'arcade',
+                        'doom', 'dos', 'dreamcast',
+                        'famicom', flash',
                         'gameboy', 'love', 'mame',
                         'mame2010', 'msx', 'nes',
                         'nintendo64', 'playstation',
