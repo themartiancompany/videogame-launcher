@@ -504,6 +504,7 @@ _settings_fs-uae_create() {
     _base_dir="${2}" \
     _game_path="${3}" \
     _configs \
+    _configs_game \
     _game_dir \
     _msg=() \
     _settings \
@@ -523,12 +524,16 @@ _settings_fs-uae_create() {
   _share="${_usr}/share"
   _configs="${_share}/videogame-launcher/configs"
   _settings_template="${_configs}/fs-uae/template.fs-uae"
-  _settings="${_base_dir}/Configurations/${_game_file_name}.fs-uae"
+  _configs_game="${_base_dir}/Configurations"
+  _settings="${_configs_game}/${_game_file_name}.fs-uae"
   _msg=(
     "Preparing FS UAE config file."
   )
   _msg_info \
     "${_msg[*]}"
+  mdir \
+    -p \
+    "${_configs_game}"
   cp \
     "${_settings_template}" \
     "${_settings}"
