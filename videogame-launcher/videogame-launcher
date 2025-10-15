@@ -96,7 +96,7 @@ _flycast_requirements() {
     'flycast'
 }
 
-_fs_uae_requirements() {
+_fs-uae_requirements() {
   _check_cmd \
     "fs-uae"
 }
@@ -469,22 +469,120 @@ _flycast_launch() {
     "${_game_path}"
 }
 
-_fs_uae_launch() {
+_cyberstorm_setup() {
+  local \
+    _cyberstorm \
+    _cyberstorm_link \
+    _cyberstorm_target \
+    _kickstarts
+  _kickstarts="${_config_dir_user}/Kickstarts"
+  _cyberstorm="cyberstormppc.rom"
+  _cyberstorm_target="$( \
+    _usr_get)/share/amiga/cyberstorm/${_cyberstorm}"
+  _cyberstorm_link="${_kickstarts}/${_cyberstorm}"
+  if [[ ! -e "${_kickstarts}/${_cyberstorm}" ]]; then
+    _msg=(
+      "Linking system Amiga Cyberstorm"
+      "Expansion Rom image in"
+      "kickstarts directory '${_kickstarts}'."
+    )
+    _msg_info \
+      "${_msg[*]}"
+    mkdir \
+      -p \
+      "${_kickstarts}"
+    ln \
+      -s \
+      "${_cyberstorm_target}" \
+      "${_cyberstorm_link}"
+  fi
+}
+
+_settings_fs-uae_create() {
+  local \
+    _app_id="${1}" \
+    _base_dir="${2}" \
+    _game_path="${3}" \
+    _configs \
+    _game_dir \
+    _msg=() \
+    _settings \
+    _settings_template \
+    _share \
+    _usr
+  _msg=(
+    "Creating game configuration."
+  )
+  _msg_info \
+    "${_msg[*]}"
+  _usr="$( \
+    _usr_get)"
+  _game_file_name="$( \
+    basename \
+      "${_game_path}")"
+  _share="${_usr}/share"
+  _configs="${_share}/videogame-launcher/configs"
+  _settings_template="${_configs}/fs-uae/template.fs-uae"
+  _settings="${_base_dir}/Configurations/${_game_file_name}.fs-uae"
+  _msg=(
+    "Preparing FS UAE config file."
+  )
+  _msg_info \
+    "${_msg[*]}"
+  cp \
+    "${_settings_template}" \
+    "${_settings}"
+  sed \
+    -i \
+    "s|%_base_dir%|${_base_dir}|g" \
+    "${_settings}"
+  sed \
+    -i \
+    "s|%_floppy_drive%|${_game_path}|g" \
+    "${_settings}"
+}
+
+_fs-uae_launch() {
   local \
     _app_id="${1}" \
     _lang="${2}" \
     _fullscreen="${3}" \
+    _cache_dir \
+    _config_dir_user \
+    _cyberstorm_img \
+    _game_dir \
+    _game_file_name \
     _game_path \
+    _settings \
     _fs_uae_opts=()
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
+  _cache_dir="${HOME}/.cache/${_app_id}"
+  _config_dir_user="${HOME}/.config/${_app_id}"
+  _game_file_name="$( \
+    basename \
+      "${_game_path}")"
+  _game_dir="$( \
+    dirname \
+      "${_game_path}")"
+  _settings="${_config_dir_user}/Configurations/${_game_file_name}.fs-uae"
+  _cyberstorm_setup
+  if [[ ! -e "${_settings}" ]]; then
+    mkdir \
+      -p \
+      "${_config_dir_user}"
+    _settings_fs-uae_create \
+      "${_app_id}" \
+      "${_config_dir_user}" \
+      "${_game_path}"
+  fi
   if [[ "${_fullscreen}" == "y" ]]; then
     _fs_uae_opts+=(
       --fullscreen
     )
   fi
-  fs_uae \
+  fs-uae \
     "${_fs_uae_opts[@]}" \
     "${_game_path}"
 }
