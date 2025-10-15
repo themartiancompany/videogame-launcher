@@ -19,24 +19,20 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-[Desktop Entry]
-Name=%_game_title%
-Comment=%_game_pkgdesc%
-Type=Application
-TryExec=mame
-Exec=%_game_command%
-Icon=%_app_id%-%_game_uuid%
-Terminal=false
-Categories=Game;
-Keywords=MAME;MSX
-Actions=preferences;fullscreen;
-
-[Desktop Action fullscreen]
-Name=Launch in fullscreen
-Exec=%_game_command% -f
-
-[Desktop Action preferences]
-Name=Preferences
-Exec=mame
-
-X-Desktop-File-Install-Version=0.26
+[fs-uae]
+accelerator = cyberstorm-ppc
+accelerator_memory = 131072
+amiga_model = A4000
+chip_memory = 2048
+fast_memory = 8192
+mouse_speed = 25
+base_dir = %_base_dir%
+floppy_drive_0 = %_floppy_drive%
+graphics_card = uaegfx-z3
+graphics_memory = 262144
+audio_buffer_target_size=60
+hard_drive_0 = %_base_dir%/Hard Drives
+kickstart_ext_file = cyberstormppc.rom
+motherboard_ram = 32768
+sound_card = toccata
+zorro_iii_memory = 1048576
