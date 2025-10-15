@@ -531,7 +531,7 @@ _settings_fs-uae_create() {
   )
   _msg_info \
     "${_msg[*]}"
-  mdir \
+  mkdir \
     -p \
     "${_configs_game}"
   cp \
