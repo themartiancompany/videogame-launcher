@@ -494,7 +494,8 @@ _cyberstorm_setup() {
     ln \
       -s \
       "${_cyberstorm_target}" \
-      "${_cyberstorm_link}"
+      "${_cyberstorm_link}" || \
+    true
   fi
 }
 
@@ -589,7 +590,7 @@ _fs-uae_launch() {
   fi
   fs-uae \
     "${_fs_uae_opts[@]}" \
-    "${_game_path}"
+    "${_settings}"
 }
 
 _gearboy_launch() {
