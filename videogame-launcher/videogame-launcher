@@ -279,7 +279,7 @@ _game_path_get() {
       _msg_warning \
         "${_msg[*]}"
       if [[ ! -d "${_path}" ]]; then
-	_msg=(
+        _msg=(
           "Found no file to launch."
         )
 	_msg_error \
