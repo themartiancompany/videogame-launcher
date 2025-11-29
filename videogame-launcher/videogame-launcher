@@ -1421,7 +1421,7 @@ _global_variables
 _requirements
 while \
   getopts \
-    'e:p:l:H:s:cvh?' \
+    'e:p:l:H:s:f:cvh?' \
     arg; do
   case \
     "${arg}" in
