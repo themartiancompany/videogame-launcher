@@ -523,7 +523,7 @@ _settings_fs-uae_create() {
     basename \
       "${_game_path}")"
   _share="${_usr}/share"
-  _configs="${_share}/videogame-launcher/configs"
+  _configs="${_share}/${app_name}/configs"
   _settings_template="${_configs}/fs-uae/template.fs-uae"
   _configs_game="${_base_dir}/Configurations"
   _settings="${_configs_game}/${_game_file_name}.fs-uae"
