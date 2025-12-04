@@ -41,8 +41,7 @@ DOC_FILES=\
   $(wildcard \
       *.rst)
 _BASH_FILES=\
-  $(_PROJECT) \
-  $(_PROJECT)-create
+  $(_PROJECT)
 
 all:
 
@@ -62,9 +61,6 @@ install-scripts:
 	$(_INSTALL_EXE) \
 	  "$(_PROJECT)/$(_PROJECT)" \
 	  "$(BIN_DIR)/$(_PROJECT)"
-	$(_INSTALL_EXE) \
-	  "$(_PROJECT)/$(_PROJECT)-create" \
-	  "$(BIN_DIR)/$(_PROJECT)-create"
 
 install-doc:
 
