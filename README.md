@@ -45,6 +45,12 @@ This program is written using the
   https://github.com/themartiancompany/crash-bash)
 library.
 
+Up to version `0.0.0.0.0.0.0.0.0.0.1.1.1.1.1`
+this program included the `videogame-launcher-create`
+program, which is now provided by
+[Videogame Installer](
+  https://github.com/themartiancompany/videogame-installer).
+
 ## Usage
 
 Help can be displayed by typing
