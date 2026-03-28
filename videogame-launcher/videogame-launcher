@@ -736,7 +736,7 @@ _mame_writable_setup() {
         "${_os_dir}/"* \
         "${_cache_dir}"
       cp \
-        "${_game_dir}/"* \
+        "${_rom_dir}/"* \
         "${_cache_dir}"
     fi
   fi
