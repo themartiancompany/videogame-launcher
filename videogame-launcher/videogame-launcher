@@ -669,9 +669,20 @@ _love_launch() {
   fi
 }
 
+_hash_get() {
+  local \
+    _file="${1}"
+  sha256sum \
+    "${_file}" |
+    awk \
+      '{print $1}'
+}
+
 _mame_opts_get() {
   local \
-    _data_dir
+    _data_dir \
+    _os_img \
+    _game_img
   if [[ "${_game_platform}" == "apple2" ]]; then
     _mame_opts+=(
       -rompath
@@ -684,6 +695,8 @@ _mame_opts_get() {
       "${_game_name}"
     )
   elif [[ "${_game_platform}" == "system7" ]]; then
+    _os_img="${_cache_dir}/system7_0_1-color.img"
+    _game_img="${_cache_dir}/${_game_name}"
     _mame_opts+=(
       maclc3
       -rompath
@@ -691,10 +704,20 @@ _mame_opts_get() {
       -swpath
         "${_cache_dir}"
       -hard1
-        "${_cache_dir}/system7_0_1-color.img"
-      -flop1
-        "${_cache_dir}/${_game_name}"
+        "${_os_img}"
     )
+    if [[ "${_os_img}" == "${_game_img}" ]]; then
+      _msg=(
+        "The videogame is the OS itself."
+      )
+      _msg_info \
+        "${_msg[*]}"
+    else
+      _mame_opts+=(
+        -flop1
+          "${_game_img}"
+      )
+    fi
   else
     _mame_opts+=(
       -rompath
