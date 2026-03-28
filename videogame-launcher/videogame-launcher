@@ -1571,7 +1571,7 @@ _game_writable_auto_detect() {
     _writable
   writable="false"
   if [[ "${game_platform}" == "system7" ]]; then
-    _writable="true"
+    _writable="y"
   fi
   _set_override \
     "game" \
