@@ -698,7 +698,7 @@ _mame_opts_get() {
     _os_img="${_cache_dir}/system7_0_1-color.img"
     _game_img="${_cache_dir}/${_game_name}"
     _mame_opts+=(
-      maclc3
+      maclc520
       -rompath
         "${_cache_dir}"
       -swpath
