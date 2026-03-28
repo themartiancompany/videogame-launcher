@@ -698,7 +698,7 @@ _mame_opts_get() {
     _os_img="${_cache_dir}/system7_0_1-color.img"
     _game_img="${_cache_dir}/${_game_name}"
     _mame_opts+=(
-      maclc520
+      maclc3
       -rompath
         "${_cache_dir}"
       -swpath
@@ -753,7 +753,7 @@ _mame_writable_setup() {
       cp \
         -r \
         "${_fw_dir}" \
-        "${_cache_dir}/maclc520"
+        "${_cache_dir}/maclc3"
       cp \
         -r \
         "${_os_dir}/"* \
