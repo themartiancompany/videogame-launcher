@@ -1,7 +1,7 @@
 [comment]: <> (SPDX-License-Identifier: AGPL-3.0)
 
 [comment]: <> (-------------------------------------------------------------)
-[comment]: <> (Copyright © 2024, 2025  Pellegrino Prevete)
+[comment]: <> (Copyright © 2024, 2025, 2026  Pellegrino Prevete)
 [comment]: <> (All rights reserved)
 [comment]: <> (-------------------------------------------------------------)
 
@@ -29,8 +29,8 @@ System, Nintendo Entertainment System,
 Nintendo GameBoy, Flash Player, Love
 MSX, Nintendo 64, Sony PlayStation,
 Sony PlayStation 2, SCUMMVM,
-Super Nintendo Entertainment System
-games.
+Super Nintendo Entertainment System,
+System 7 games.
 
 It works cross-platform on GNU/Linux,
 Android and Windows by making use of many

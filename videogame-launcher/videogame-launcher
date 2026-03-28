@@ -1,32 +1,33 @@
 #!/usr/bin/env bash
 
-#    ----------------------------------------------------------------------
-#    Copyright © 2025  Pellegrino Prevete
+#    ----------------------------------------------------------
+#    Copyright © 2025, 2026  Pellegrino Prevete
 #
 #    All rights reserved
-#    ----------------------------------------------------------------------
+#    ----------------------------------------------------------
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
+#    This program is free software: you can redistribute it
+#    and/or modify it under the terms of the GNU Affero
+#    General Public License as published by the Free Software
+#    Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    This program is distributed in the hope that it will be
+#    useful, but WITHOUT ANY WARRANTY; without even the
+#    implied warranty of MERCHANTABILITY or FITNESS FOR A
+#    PARTICULAR PURPOSE.
+#    See the GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero
+#    General Public License along with this program.
+#    If not, see <https://www.gnu.org/licenses/>.
 
-
-_bin="$( \
+_bin="$(
   dirname \
-    "$( \
-      command \
+    "$(command \
         -v \
         "env")")"
-_lib="$( \
+_lib="$(
   realpath \
     "${_bin}/../lib")"
 _crash_bash="${_lib}/libcrash-bash/crash-bash"
@@ -38,7 +39,7 @@ _sourced \
 _usr_get() {
   local \
     _bin
-  _bin="$( \
+  _bin="$(
     dirname \
       "$(command \
            -v \
@@ -111,7 +112,7 @@ _love_requirements() {
     _msg=() \
     _love_found \
     _os
-  _os="$( \
+  _os="$(
     uname \
       -o)"
   if [[ "${_os}" == "Android" ]]; then
@@ -120,7 +121,7 @@ _love_requirements() {
       "termux-tools"
     _check_cmd \
       "pacman"
-    _love_found="$( \
+    _love_found="$(
       pacman \
         -Q \
         "love-android")"
@@ -142,8 +143,37 @@ _love_requirements() {
 }
 
 _mame_requirements() {
+  local \
+    _apple2_dir \
+    _data_dir \
+    _lc_dir
   _check_cmd \
     'mame'
+  _data_dir="$(
+    _usr_get)/share"
+  if [[ "${_game_platform}" == "apple2" ]]; then
+    _apple2_dir="${_data_dir}/apple2"
+    if [[ ! -d "${_apple2_dir}" ]]; then
+      _msg=(
+        "Directory '${_apple2_dir}'"
+        "does not exist, the game will"
+        "probably not start."
+      )
+      _msg_warning \
+        "${_msg[*]}"
+    fi
+  elif [[ "${_game_platform}" == "system7" ]]; then
+    _lc_dir="${_data_dir}/mac-lc"
+    if [[ ! -d "${_lc_dir}" ]]; then
+      _msg=(
+        "Directory '${_lc_dir}'"
+        "does not exist, the game will"
+        "probably not start."
+      )
+      _msg_warning \
+        "${_msg[*]}"
+    fi
+  fi
 }
 
 _openmsx_requirements() {
@@ -158,7 +188,7 @@ _pcsx2_requirements() {
   # Maybe at some point Android
   # will be blessed with PlayStation 2
   # support.
-  _pcsx2="$( \
+  _pcsx2="$(
     _pcsx2_auto_detect)"
   _pcsx2_pkgname="${_pcsx2}"
   if [[ "${_pcsx2}" == "PCSX2" ]]; then
@@ -183,18 +213,18 @@ _pcsx2_auto_detect() {
   # Maybe at some point Android
   # will be blessed with PlayStation 2
   # support.
-  _sse3="$( \
+  _sse3="$(
     cat \
-      "/proc/cpuinfo" | \
+      "/proc/cpuinfo" |
       grep \
-        "^flags" | \
+        "^flags" |
         grep \
           "\bsse3\b")"
-  _sse4="$( \
+  _sse4="$(
     cat \
-      "/proc/cpuinfo" | \
+      "/proc/cpuinfo" |
       grep \
-        "^flags" | \
+        "^flags" |
         grep \
           "\bsse4\b")"
   if [[ "${_sse3}" == "" ]]; then
@@ -213,7 +243,7 @@ _pcsx2_auto_detect() {
 _retroarch_requirements() {
   local \
     _os
-  _os="$( \
+  _os="$(
     uname \
       -o)"
   if [[ "${_os}" == "Android" ]]; then
@@ -229,7 +259,7 @@ _retroarch_requirements() {
 _ruffle_requirements() {
   local \
     _os
-  _os="$( \
+  _os="$(
     uname \
       -o)"
   if [[ "${_os}" == "GNU/Linux" ]]; then
@@ -252,7 +282,7 @@ _game_dir_get() {
   local \
     _app_id="${1}" \
     _dir
-  _dir="$( \
+  _dir="$(
     _usr_get)/games/${_app_id}"
   echo \
     "${_dir}"
@@ -265,7 +295,7 @@ _game_path_get() {
     _game_dir \
     _path \
     _msg=()
-  _game_dir="$( \
+  _game_dir="$(
     _game_dir_get \
       "${_app_id}")"
   _path="${_game_dir}/${_lang}"
@@ -287,14 +317,14 @@ _game_path_get() {
 	  0
       fi
     fi
-    _game_path="$( \
+    _game_path="$(
       cat \
         "${_path}" || \
       true)"
   elif [[ -d "${_path}" ]]; then
     _game_path="${_path}"
   fi
-  _game_path="$( \
+  _game_path="$(
     realpath \
       "${_game_path}")"
 }
@@ -397,7 +427,7 @@ _fceux_launch() {
   fi
   if [[ "${_game_platform}" == "famicom" ]]; then
     if [[ ! -e "${_fceux_bios}" ]]; then
-      _share="$( \
+      _share="$(
         _get_usr)/share"
       _fceux_sys_bios="${_share}/famicom/bios/DISKSYS.ROM"
       if [[ ! -e "${_fceux_sys_bios}" ]]; then
@@ -477,7 +507,7 @@ _cyberstorm_setup() {
     _kickstarts
   _kickstarts="${_config_dir_user}/Kickstarts"
   _cyberstorm="cyberstormppc.rom"
-  _cyberstorm_target="$( \
+  _cyberstorm_target="$(
     _usr_get)/share/amiga/cyberstorm/${_cyberstorm}"
   _cyberstorm_link="${_kickstarts}/${_cyberstorm}"
   if [[ ! -e "${_kickstarts}/${_cyberstorm}" ]]; then
@@ -517,9 +547,9 @@ _settings_fs-uae_create() {
   )
   _msg_info \
     "${_msg[*]}"
-  _usr="$( \
+  _usr="$(
     _usr_get)"
-  _game_file_name="$( \
+  _game_file_name="$(
     basename \
       "${_game_path}")"
   _share="${_usr}/share"
@@ -566,10 +596,10 @@ _fs-uae_launch() {
     "${_lang}"
   _cache_dir="${HOME}/.cache/${_app_id}"
   _config_dir_user="${HOME}/.config/${_app_id}"
-  _game_file_name="$( \
+  _game_file_name="$(
     basename \
       "${_game_path}")"
-  _game_dir="$( \
+  _game_dir="$(
     dirname \
       "${_game_path}")"
   _settings="${_config_dir_user}/Configurations/${_game_file_name}.fs-uae"
@@ -638,6 +668,28 @@ _love_launch() {
   fi
 }
 
+_mame_opts_get() {
+  local \
+    _data_dir
+  if [[ "${_game_platform}" == "apple2" ]]; then
+    _mame_opts+=(
+      -swpath
+        "${_rom_dir}"
+      apple2e
+      # -flop1
+      #   "${_flop1}"
+    )
+  elif [[ "${_game_platform}" == "system7" ]]; then
+    _data_dir="$(
+      _usr_get)/share/mac-lc/mac-lc"
+    _mame_opts+=(
+      -swpath
+        "${_rom_dir}"
+      
+    )
+  fi
+}
+
 _mame_launch() {
   local \
     _app_id="${1}" \
@@ -657,24 +709,16 @@ _mame_launch() {
       -nomaximize
     )
   fi
-  _rom_dir="$( \
+  _rom_dir="$(
     dirname \
       "${_game_path}")"
-  _game_name="$( \
+  _game_name="$(
     basename \
       "${_game_path}")"
   _mame_opts+=(
     -rompath
       "${_rom_dir}"
   )
-  if [[ "${_game_platform}" == "apple2" ]]; then
-    _mame_opts+=(
-      -swpath
-        "${_rom_dir}"
-      apple2e
-      # -flop1
-      #   "${_flop1}"
-    )
   fi
   _msg=(
     "Running MAME with options"
@@ -723,9 +767,9 @@ _pcsx2_launch() {
     _cache_dir
   _cache_dir="${HOME}/.cache/${_app_id}"
   _config_dir_user="${HOME}/.config/${_app_id}"
-  _pcsx2="$( \
+  _pcsx2="$(
     _pcsx2_auto_detect)"
-  _pcsx2_ver="$( \
+  _pcsx2_ver="$(
     basename \
       "${_pcsx2}")"
   _game_path_get \
@@ -733,7 +777,7 @@ _pcsx2_launch() {
     "${_lang}"
   _msg_info \
     "Running '${_game_path}'."
-  _game_dir="$( \
+  _game_dir="$(
     dirname \
       "${_game_path}")"
   if [[ ! -d "${_config_dir_user}" ]]; then
@@ -750,7 +794,7 @@ _pcsx2_launch() {
       )
       _msg_info \
         "${_msg[*]}"
-      _settings_system="$( \
+      _settings_system="$(
         _usr_get)/share/${app_name}/configs"
     fi
     mkdir \
@@ -810,7 +854,7 @@ _retroarch_launch() {
     _cores_path \
     _platform_core_path \
     _cmd=()
-  _os="$( \
+  _os="$(
     uname \
       -o)"
   _game_path_get \
@@ -902,7 +946,7 @@ _ruffle_launch() {
     _game_path \
     _ruffle_opts=() \
     _os
-  _os="$( \
+  _os="$(
     uname \
       -o)"
   _game_path_get \
@@ -1118,10 +1162,10 @@ Seamlessly launch videogames.
 
 Usage:
   ${app_name}
-    <app_id>
+    <app-id>
 
   options:
-     -e <game_launcher>     It can be 'doomretro',
+     -e <game-launcher>     It can be 'doomretro',
                             'dosbox', 'duckstation',
                             'fceux', 'flashplayer',
                             'flycast', 'fs-uae', 'gearboy',
@@ -1130,7 +1174,7 @@ Usage:
                             'pcsx2', 'scummvm',
                             'snes9x'.
                             Default: ${game_launcher}
-     -p <game_platform>     Game platform. It can be
+     -p <game-platform>     Game platform. It can be
                             'amiga, 'apple2', 'arcade',
                             'doom', 'dreamcast',
                             'famicom', 'flash',
@@ -1140,13 +1184,14 @@ Usage:
                             'playstation', 'playstation2',
                             'scummvm' or 'snes'.
                             Default: ${game_platform}
-     -l <game_lang>         Game languages.
+     -l <game-lang>         Game languages.
                             Default: ${game_lang}
      -H                     Enables on-screen controller HUD.
                             Default: ${game_hud}
-     -s <game_settings>     Depending on the selected game launcher
-                            it can be a Duckstation settings file or
-                            the name for a SCUMMVM game platform.
+     -s <game-settings>     Depending on the selected game launcher
+                            it can be a Duckstation settings file
+			    or the name for a SCUMMVM game
+                            platform.
                             Default: ${game_settings}
      -f                     Launch the game in full-screen.
                             Default: ${fullscreen_enabled}
@@ -1182,10 +1227,10 @@ _game_settings_auto_detect() {
   _launcher="${game_launcher}"
   _settings=""
   if [[ "${_launcher}" == "duckstation" ]]; then
-    _settings="$( \
+    _settings="$(
       _usr_get)/games/${app_id}/${app_id}.settings.ini"
   elif [[ "${_launcher}" == "pcsx2" ]]; then
-    _pcsx2="$( \
+    _pcsx2="$(
       _pcsx2_auto_detect)"
     _settings="${HOME}/.config/${app_id}/${_pcsx2}"
   fi
@@ -1205,7 +1250,7 @@ _game_launcher_auto_detect() {
     _launcher \
     _os \
     _msg=()
-  _os="$( \
+  _os="$(
     uname \
       -o)"
   _game_platform=""
@@ -1223,6 +1268,10 @@ _game_launcher_auto_detect() {
     _launcher="retroarch"
     if [[ "${_game_platform}" == "flash" ]]; then
       _launcher="ruffle"
+    elif [[ "${_game_platform}" == "system7" ]]; then
+      # at some point somebody will
+      # build PCE for android i guess
+      _launcher="retroarch"
     fi
   elif [[ "${_os}" == "GNU/Linux" ]]; then
     _launcher="duckstation"
@@ -1246,6 +1295,8 @@ _game_launcher_auto_detect() {
       _launcher="openmsx"
     elif [[ "${_game_platform}" == "playstation2" ]]; then
       _launcher="pcsx2"
+    elif [[ "${_game_platform}" == "system7" ]]; then
+      _launcher="mame"
     fi
   fi
   if [[ "${_game_platform}" == "love" ]]; then
@@ -1266,7 +1317,7 @@ _platform_find() {
   local \
     _platform="${1}" \
     _game_dir
-  _game_dir="$( \
+  _game_dir="$(
     _game_dir_get \
       "${app_id}")"
   _platform_game_dir="${_game_dir}/${_platform}"
@@ -1282,18 +1333,25 @@ _retroarch_platform_auto_detect() {
     _game_path \
     _game_lang \
     _game_dir \
-    _platforms=()
+    _platforms=() \
+    _msg=()
   _game_lang="${game_lang}"
   if [[ -v "override_game_lang" ]]; then
     _game_lang="${override_game_lang}"
   fi
-  _msg_info \
+  _msg=(
     "Retroarch platform auto-detect."
+  )
+  _msg_info \
+    "${_msg[*]}"
   _game_path_get \
       "${app_id}" \
       "${_game_lang}"
-  _msg_info \
+  _msg=(
     "Game path: ${_game_path}."
+  )
+  _msg_info \
+    "${_msg[*]}"
   if [[ "${_game_path}" == *".EXE" ]]; then
     _platform="dos"
   elif [[ "${_game_path}" == *".bin" || \
@@ -1306,6 +1364,8 @@ _retroarch_platform_auto_detect() {
   elif [[ "${_game_path}" == *".gbc" || \
           "${_game_path}" == *".gb" ]]; then
     _platform="gameboy"
+  elif [[ "${_game_path}" == *".img" ]]; then
+    _platform="mame"
   elif [[ "${_game_path}" == *".iso" ]]; then
     _platform="playstation2"
   elif [[ "${_game_path}" == *".mx2" ]]; then
@@ -1322,13 +1382,49 @@ _retroarch_platform_auto_detect() {
   elif [[ -d "${_game_path}" ]]; then
     _platform="scummvm"
   elif [[ "${_game_path}" == "" ]]; then
-    _game_dir="$( \
+    _game_dir="$(
       _game_dir_get \
         "${app_id}")"
     if [[ "$(ls "${_game_dir}/"*".cdi")" != "" ]]; then
-      echo \
+      _msg=(
 	"Definitely not gonna have it this way."
+      )
+      echo \
+        "${_msg[*]}"
     fi
+  fi
+}
+
+_mame_platform_auto_detect() {
+  local \
+    _game_path \
+    _game_lang \
+    _game_dir \
+    _platforms=() \
+    _msg=()
+  _game_lang="${game_lang}"
+  if [[ -v "override_game_lang" ]]; then
+    _game_lang="${override_game_lang}"
+  fi
+  _msg=(
+    "MAME platform auto-detect."
+  )
+  _msg_info \
+    "${_msg[*]}"
+  _game_path_get \
+      "${app_id}" \
+      "${_game_lang}"
+  _msg=(
+    "Game path for"
+    "videogame with app id"
+    "${app_id}: ${_game_path}."
+  )
+  _msg_info \
+    "${_msg[*]}"
+  if [[ "${_game_path}" == *".img" ]]; then
+    _platform="system7"
+  else
+    _platform="arcade"
   fi
 }
 
@@ -1353,9 +1449,7 @@ _game_platform_auto_detect() {
   elif [[ "${game_launcher}" == "love" ]]; then
     _platform="love"
   elif [[ "${game_launcher}" == "mame" ]]; then
-    _platform="arcade"
-    # TODO:
-    # _mame_auto_detect
+    _mame_platform_auto_detect
   elif [[ "${game_launcher}" == "openmsx" ]]; then
     _platform="msx"
   elif [[ "${game_launcher}" == "retroarch" ]]; then
@@ -1378,7 +1472,7 @@ _game_hud_auto_detect() {
   local \
     _os \
     _game_hud
-  _os="$( \
+  _os="$(
     uname \
       -o)"
   _game_hud="n"

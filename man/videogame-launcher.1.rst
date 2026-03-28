@@ -1,33 +1,36 @@
 ..
    SPDX-License-Identifier: AGPL-3.0-or-later
 
-   ----------------------------------------------------------------------
-   Copyright © 2024, 2025  Pellegrino Prevete
+   -------------------------------------------------------------
+   Copyright © 2024, 2025, 2026  Pellegrino Prevete
 
    All rights reserved
-   ----------------------------------------------------------------------
+   -------------------------------------------------------------
 
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU Affero General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
+   This program is free software: you can redistribute it
+   and/or modify it under the terms of the GNU Affero
+   General Public License as published by the Free Software
+   Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU Affero General Public License for more details.
+   This program is distributed in the hope that it will be
+   useful, but WITHOUT ANY WARRANTY; without even the
+   implied warranty of MERCHANTABILITY or FITNESS FOR
+   A PARTICULAR PURPOSE. See the GNU Affero General
+   Public License for more details.
 
-   You should have received a copy of the GNU Affero General Public License
-   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU Affero
+   General Public License along with this program.
+   If not, see <https://www.gnu.org/licenses/>.
 
 
 ====================================
 videogame-launcher
 ====================================
 
---------------------------------------------------------------------------------
+--------------------
 Videogame Launcher
---------------------------------------------------------------------------------
+--------------------
 :Version: videogame-launcher |version|
 :Manual section: 1
 
@@ -35,7 +38,7 @@ Videogame Launcher
 Synopsis
 ========
 
-videogame-launcher *[options]* *app_id*
+videogame-launcher *[options]* *app-id*
 
 
 Description
@@ -52,7 +55,7 @@ Ur application store.
 Options
 ========
 
--e game_launcher        It can be 'doom', 'dosbox'
+-e game-launcher        It can be 'doom', 'dosbox'
                         'duckstation', 'fceux',
                         'flashplayer', 'flycast',
                         'fs-uae', 'gearboy', 'love', 'mame',
@@ -60,7 +63,7 @@ Options
                         'pcsx2', 'ruffle', 'scummvm',
                         'snes9x'.
 
--p game_platform        Game platform. It can be
+-p game-platform        Game platform. It can be
                         'amiga', 'apple2', 'arcade',
   	                'doom', 'dos', 'dreamcast',
                         'famicom', 'flash', 'gameboy',
@@ -69,12 +72,12 @@ Options
                         'playstation', 'playstation2',
                         'scummvm' or 'snes'.
 
--l game_lang            Game languages.
+-l game-lang            Game languages.
 
 -H                      Enables on-screen
                         controller HUD.
 
--s game_settings        It can be a Duckstation settings file
+-s game-settings        It can be a Duckstation settings file
                         or a SCUMMVM game name.
 
 -f                      Launch the game in full-screen.
@@ -89,10 +92,12 @@ Bugs
 
 https://github.com/themartiancompany/videogame-launcher/-/issues
 
+
 Copyright
 =========
 
 Copyright Pellegrino Prevete. AGPL-3.0.
+
 
 See also
 ========
