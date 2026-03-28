@@ -685,7 +685,7 @@ _mame_opts_get() {
       _usr_get)/share/mac-lc/mac-lc"
     _mame_opts+=(
       -rompath
-        "${_rom_dir}"
+        "${_data_dir}"
       -swpath
         "${_rom_dir}"
       maclc520
