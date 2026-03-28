@@ -1566,6 +1566,20 @@ _game_hud_auto_detect() {
     "${_game_hud}"
 }
 
+_game_writable_auto_detect() {
+  local \
+    _writable
+  writable="false"
+  if [[ "${game_platform}" == "system7" ]]; then
+    _writable="true"
+  fi
+  _set_override \
+    "game" \
+    "writable" \
+    "${_writable}"
+}
+
+
 _set_overrides() {
   local \
     _app_id
@@ -1589,10 +1603,7 @@ _set_overrides() {
   _game_lang_auto_detect
   _game_hud_auto_detect
   _game_settings_auto_detect
-  _set_override \
-    "game" \
-    "writable" \
-    "n"
+  _game_writable_auto_detect
 }
 
 _globals
