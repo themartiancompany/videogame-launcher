@@ -685,6 +685,7 @@ _mame_opts_get() {
     _mame_opts+=(
       -swpath
         "${_rom_dir}"
+      maclc520
     )
   fi
 }
