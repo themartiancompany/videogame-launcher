@@ -1569,7 +1569,7 @@ _game_hud_auto_detect() {
 _game_writable_auto_detect() {
   local \
     _writable
-  writable="n"
+  _writable="n"
   if [[ "${game_platform}" == "system7" ]]; then
     _writable="y"
   fi
