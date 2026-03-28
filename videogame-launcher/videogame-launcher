@@ -678,14 +678,21 @@ _mame_opts_get() {
       apple2e
       # -flop1
       #   "${_flop1}"
+      "${_game_name}"
     )
   elif [[ "${_game_platform}" == "system7" ]]; then
     _data_dir="$(
       _usr_get)/share/mac-lc/mac-lc"
     _mame_opts+=(
+      -rompath
+        "${_rom_dir}"
       -swpath
         "${_rom_dir}"
       maclc520
+    )
+  else
+    _mame_opts+=(
+      "${_game_name}"
     )
   fi
 }
@@ -727,8 +734,7 @@ _mame_launch() {
   _msg_info \
     "${_msg[*]}"
   mame \
-    "${_mame_opts[@]}" \
-    "${_game_name}"
+    "${_mame_opts[@]}"
 }
 
 _openmsx_launch() {
