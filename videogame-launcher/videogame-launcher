@@ -685,7 +685,6 @@ _mame_opts_get() {
     _mame_opts+=(
       -swpath
         "${_rom_dir}"
-      
     )
   fi
 }
@@ -719,6 +718,7 @@ _mame_launch() {
     -rompath
       "${_rom_dir}"
   )
+  _mame_opts_get
   _msg=(
     "Running MAME with options"
     "'${_mame_opts[*]}'."
