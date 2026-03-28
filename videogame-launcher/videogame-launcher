@@ -56,6 +56,7 @@ _global_variables() {
   game_lang=""
   game_hud=""
   game_settings=""
+  game_writable=""
   fullscreen_enabled=""
   color=""
   quiet=""
@@ -673,6 +674,8 @@ _mame_opts_get() {
     _data_dir
   if [[ "${_game_platform}" == "apple2" ]]; then
     _mame_opts+=(
+      -rompath
+        "${_rom_dir}"
       -swpath
         "${_rom_dir}"
       apple2e
@@ -681,19 +684,61 @@ _mame_opts_get() {
       "${_game_name}"
     )
   elif [[ "${_game_platform}" == "system7" ]]; then
-    _data_dir="$(
-      _usr_get)/share/mac-lc/mac-lc"
     _mame_opts+=(
       -rompath
-        "${_data_dir}"
+        "${_cache_dir}"
       -swpath
-        "${_rom_dir}"
+        "${_cache_dir}"
+      -hard1
+        "${_cache_dir}/system7_0_1-color.img"
+      -hard2
+        "${_cache_dir}/${_game_name}"
       maclc520
     )
   else
     _mame_opts+=(
+      -rompath
+        "${_rom_dir}"
       "${_game_name}"
     )
+  fi
+}
+
+_mame_writable_setup() {
+  local \
+    _data_dir \
+    _fw_dir \
+    _os_dir \
+    _os_img
+  _data_dir="$(
+    _usr_get)/share"
+  _cache_dir="${HOME}/.cache/${_app_id}"
+  if [[ ! -d "${_cache_dir}" ]]; then
+    _msg=(
+      "Copying System 7 and game image onto"
+      "user home directory."
+    )
+    _msg_info \
+      "${_msg[*]}"
+    mkdir \
+      -p \
+      "${_cache_dir}"
+    if [[ "${_game_platform}" == "system7" ]]; then
+      _fw_dir="${_data_dir}/mac-lc/mac-lc"
+      _os_dir="${_data_dir}/system7/system7"
+      _os_img="${_os_dir}/system7_0_1-color.img"
+      cp \
+        -r \
+        "${_data_dir}" \
+        "${_cache_dir}/maclc520"
+      cp \
+        -r \
+        "${_os_dir}/"* \
+        "${_cache_dir}"
+      cp \
+        "${_game_dir}/"* \
+        "${_cache_dir}"
+    fi
   fi
 }
 
@@ -702,6 +747,7 @@ _mame_launch() {
     _app_id="${1}" \
     _lang="${2}" \
     _fullscreen="${3}" \
+    _cache_dir \
     _game_path \
     _mame_opts=() \
     _rom_dir \
@@ -722,10 +768,9 @@ _mame_launch() {
   _game_name="$(
     basename \
       "${_game_path}")"
-  _mame_opts+=(
-    -rompath
-      "${_rom_dir}"
-  )
+  if [[ "${_writable}" = "true" ]]; then
+    _mame_writable_setup
+  fi
   _mame_opts_get
   _msg=(
     "Running MAME with options"
@@ -1132,7 +1177,8 @@ _videogame_launcher() {
     _lang="${4}" \
     _hud="${5}" \
     _settings="${6}" \
-    _fullscreen="${7}" \
+    _writable="${7}" \
+    _fullscreen="${8}" \
     _launch_opts=()
   "_${_game_launcher}_requirements"
   _game_launcher_opts_get
@@ -1514,6 +1560,10 @@ _set_overrides() {
   _game_lang_auto_detect
   _game_hud_auto_detect
   _game_settings_auto_detect
+  _set_override \
+    "game" \
+    "writable" \
+    "n"
 }
 
 _globals
@@ -1521,7 +1571,7 @@ _global_variables
 _requirements
 while \
   getopts \
-    'e:p:l:H:s:f:cvh?' \
+    'e:p:l:H:s:f:w:cvh?' \
     arg; do
   case \
     "${arg}" in
@@ -1537,6 +1587,8 @@ while \
       override_game_settings="${OPTARG}" ;;
     f) \
       override_fullscreen_enabled="y" ;;
+    w) \
+      override_game_writable="y" ;;
     c) \
       override_color="y" ;;
     v) \
@@ -1577,6 +1629,7 @@ app_opts=(
   "${game_lang}"
   "${game_hud}"
   "${game_settings}"
+  "${game_writable}"
   "${fullscreen_enabled}"
 )
 _videogame_launcher \
