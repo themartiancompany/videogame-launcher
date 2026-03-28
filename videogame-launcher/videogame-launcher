@@ -685,6 +685,7 @@ _mame_opts_get() {
     )
   elif [[ "${_game_platform}" == "system7" ]]; then
     _mame_opts+=(
+      maclc520
       -rompath
         "${_cache_dir}"
       -swpath
@@ -693,7 +694,6 @@ _mame_opts_get() {
         "${_cache_dir}/system7_0_1-color.img"
       -hard2
         "${_cache_dir}/${_game_name}"
-      maclc520
     )
   else
     _mame_opts+=(
@@ -756,12 +756,6 @@ _mame_launch() {
   _game_path_get \
     "${_app_id}" \
     "${_lang}"
-  if [[ "${_fullscreen}" == "n" ]]; then
-    _mame_opts+=(
-      -window
-      -nomaximize
-    )
-  fi
   _rom_dir="$(
     dirname \
       "${_game_path}")"
@@ -772,6 +766,12 @@ _mame_launch() {
     _mame_writable_setup
   fi
   _mame_opts_get
+  if [[ "${_fullscreen}" == "n" ]]; then
+    _mame_opts+=(
+      -window
+      -nomaximize
+    )
+  fi
   _msg=(
     "Running MAME with options"
     "'${_mame_opts[*]}'."
