@@ -729,7 +729,7 @@ _mame_writable_setup() {
       _os_img="${_os_dir}/system7_0_1-color.img"
       cp \
         -r \
-        "${_data_dir}" \
+        "${_fw_dir}" \
         "${_cache_dir}/maclc520"
       cp \
         -r \
