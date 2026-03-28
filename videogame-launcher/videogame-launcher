@@ -692,7 +692,7 @@ _mame_opts_get() {
         "${_cache_dir}"
       -hard1
         "${_cache_dir}/system7_0_1-color.img"
-      -hard2
+      -flop1
         "${_cache_dir}/${_game_name}"
     )
   else
