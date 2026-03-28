@@ -685,7 +685,7 @@ _mame_opts_get() {
     )
   elif [[ "${_game_platform}" == "system7" ]]; then
     _mame_opts+=(
-      maclc520
+      maclc3
       -rompath
         "${_cache_dir}"
       -swpath
