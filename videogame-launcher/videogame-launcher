@@ -683,6 +683,11 @@ _mame_opts_get() {
     _data_dir \
     _os_img \
     _game_img
+  if [[ "${quiet}" == "n" ]]; then
+    _mame_opts+=(
+      -v
+    )
+  fi
   if [[ "${_game_platform}" == "apple2" ]]; then
     _mame_opts+=(
       -rompath
