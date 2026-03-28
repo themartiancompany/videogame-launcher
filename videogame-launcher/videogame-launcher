@@ -768,7 +768,7 @@ _mame_launch() {
   _game_name="$(
     basename \
       "${_game_path}")"
-  if [[ "${_writable}" = "true" ]]; then
+  if [[ "${_writable}" = "y" ]]; then
     _mame_writable_setup
   fi
   _mame_opts_get
