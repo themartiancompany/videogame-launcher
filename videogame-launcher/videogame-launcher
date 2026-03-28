@@ -719,7 +719,6 @@ _mame_launch() {
     -rompath
       "${_rom_dir}"
   )
-  fi
   _msg=(
     "Running MAME with options"
     "'${_mame_opts[*]}'."
