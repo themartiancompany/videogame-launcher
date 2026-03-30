@@ -718,8 +718,17 @@ _mame_opts_get() {
       _msg_info \
         "${_msg[*]}"
     else
+      # Same as -hard1 is available
+      # -flop1
+      # To get allowed options run
+      # mame maclc -listmedia
+      # For now no floppy image
       _mame_opts+=(
-        -flop1
+        # -flop1
+        #   "${_game_img}"
+        # -flop1
+        #   "${_game_img}"
+        -hard
           "${_game_img}"
       )
     fi
@@ -764,6 +773,8 @@ _mame_writable_setup() {
         "${_os_dir}/"* \
         "${_cache_dir}"
       cp \
+        -v \
+        -r \
         "${_rom_dir}/"* \
         "${_cache_dir}"
     fi
