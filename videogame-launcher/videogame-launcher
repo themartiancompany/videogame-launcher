@@ -182,6 +182,12 @@ _openmsx_requirements() {
     'openmsx'
 }
 
+_pce_requirements() {
+  _check_cmd \
+    'pce-macplus' \
+    "pce"
+}
+
 _pcsx2_requirements() {
   local \
     _pcsx2 \
@@ -779,6 +785,113 @@ _mame_writable_setup() {
         "${_cache_dir}"
     fi
   fi
+}
+
+_pce_opts_get() {
+  local \
+    _data_dir \
+    _os_img \
+    _game_img
+  if [[ "${quiet}" == "n" ]]; then
+    _pce_opts+=(
+      -v
+    )
+  fi
+  if [[ "${_game_platform}" == "system7" ]]; then
+    _os_img="${_cache_dir}/system7_0_1.img"
+    _game_img="${_cache_dir}/${_game_name}"
+    _pce_opts+=(
+      --terminal
+        "x11"
+      --config
+        "${_cache_dir}/pce-mac-plus.cfg"
+      --run
+    )
+  else
+    _msg=(
+      "Unsupported platform '${_game_platform}'."
+    )
+    _msg_error \
+      "${_msg[*]}" \
+      1
+  fi
+}
+
+_pce_writable_setup() {
+  local \
+    _data_dir \
+    _fw_dir \
+    _os_dir \
+    _os_img
+  _data_dir="$(
+    _usr_get)/share"
+  _cache_dir="${HOME}/.cache/${_app_id}"
+  if [[ ! -d "${_cache_dir}" ]]; then
+    _msg=(
+      "Copying Macintosh Plus and game image onto"
+      "user home directory."
+    )
+    _msg_info \
+      "${_msg[*]}"
+    mkdir \
+      -p \
+      "${_cache_dir}"
+    if [[ "${_game_platform}" == "system7" ]]; then
+      _fw_dir="${_data_dir}/mac-plus/pce"
+      _os_dir="${_data_dir}/system7/system7"
+      _os_img="${_os_dir}/system7_0_1.img"
+      cp \
+        -r \
+        "${_fw_dir}/"* \
+        "${_cache_dir}"
+      cp \
+        -r \
+        "${_os_img}" \
+        "${_cache_dir}/hd1.img"
+      cp \
+        -v \
+        -r \
+        "${_game_path}" \
+        "${_cache_dir}/hd2.img"
+    fi
+  fi
+}
+
+_pce_launch() {
+  local \
+    _app_id="${1}" \
+    _lang="${2}" \
+    _fullscreen="${3}" \
+    _cache_dir \
+    _config_file \
+    _game_path \
+    _pce_opts=() \
+    _rom_dir \
+    _game_name \
+    _msg=()
+  _game_path_get \
+    "${_app_id}" \
+    "${_lang}"
+  _rom_dir="$(
+    dirname \
+      "${_game_path}")"
+  _game_name="$(
+    basename \
+      "${_game_path}")"
+  _pce_writable_setup
+  if [[ "${_fullscreen}" == "n" ]]; then
+    _pce_opts+=(
+    )
+  fi
+  _pce_opts_get
+  _msg=(
+    "Running PCE with options"
+    "'${_mame_opts[*]}'."
+  )
+  _msg_info \
+    "${_msg[*]}"
+  pce \
+    "${_pce_opts[@]}"
 }
 
 _mame_launch() {
@@ -1389,6 +1502,7 @@ _game_launcher_auto_detect() {
       _launcher="pcsx2"
     elif [[ "${_game_platform}" == "system7" ]]; then
       _launcher="mame"
+      # _launcher="pce"
     fi
   fi
   if [[ "${_game_platform}" == "love" ]]; then
@@ -1544,6 +1658,8 @@ _game_platform_auto_detect() {
     _mame_platform_auto_detect
   elif [[ "${game_launcher}" == "openmsx" ]]; then
     _platform="msx"
+  elif [[ "${game_launcher}" == "pce" ]]; then
+    _platform="macplus"
   elif [[ "${game_launcher}" == "retroarch" ]]; then
     _retroarch_platform_auto_detect
   elif [[ "${game_launcher}" == "$(_lower \
