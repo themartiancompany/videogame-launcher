@@ -734,7 +734,9 @@ _mame_opts_get() {
         #   "${_game_img}"
         # -flop1
         #   "${_game_img}"
-        -hard
+        -scsi:5
+	  "harddisk"
+	-hard2
           "${_game_img}"
       )
     fi
