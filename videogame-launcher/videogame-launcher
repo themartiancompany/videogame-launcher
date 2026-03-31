@@ -892,7 +892,7 @@ _pce_launch() {
   )
   _msg_info \
     "${_msg[*]}"
-  pce \
+  pce-macplus \
     "${_pce_opts[@]}"
 }
 
